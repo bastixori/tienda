@@ -107,11 +107,11 @@ TOP_10_ALIEXPRESS_PRODUCTS = [
    "Conéctala a cualquier cargador, power bank o notebook y listo. Sin cables, sin complicaciones. Disponible en Luz Cálida y Blanca.",
    json.dumps(["Plug & Play USB directo", "Solo 1W de consumo", "Luz antideslumbrante"])),
   
-  ("prod-2", "Power Bank MagSafe 10.000mAh Cyberpunk Transparente", "Cargadores & Baterías",
-   24.990, 34.990, 4.91, 280, 45, "", "public/assets/powerbank.jpg",
-   "5 cargas completas sin buscar enchufe. Pégala magnéticamente a tu celular.",
-   "Diseño cyberpunk transparente futurista con imán MagSafe ultra fuerte y pantalla LED digital de porcentaje de batería.",
-   json.dumps(["Imán MagSafe ultra fuerte", "Pantalla LED de % real", "Carga inalámbrica 15W + PD 22.5W"])),
+  ("prod-2", "Power Bank 20.000mAh Ultra Rápida con Pantalla Digital", "Cargadores & Baterías",
+    24.990, 34.990, 4.91, 280, 45, "", "public/assets/powerbank.png",
+    "5 cargas completas sin buscar enchufe. Pantalla LED de porcentaje en tiempo real.",
+    "Batería externa portátil de alta capacidad de 20.000mAh con pantalla digital LED, múltiples puertos USB de carga súper rápida y acabado matte de gran durabilidad.",
+    json.dumps(["Pantalla digital LED de % real", "Carga ultra rápida multipuerto", "Capacidad real 20.000mAh"])),
 
   ("prod-3", "Cargador GaN 65W Fast Charger Dual USB-C + USB-A", "Cargadores & Baterías",
    22.990, 29.990, 4.93, 195, 60, "", "public/assets/charger.jpg",
