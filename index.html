@@ -86,7 +86,7 @@
     }
     .social-proof.hiding { animation: slideOutLeft .4s ease-in forwards; }
 
-    /* Premium Floating Social Bar (HD Vector Logos) */
+    /* Floating Social Bar (HD Vector Logos) */
     .floating-social-bar {
       position: fixed; bottom: 22px; right: 22px; z-index: 170;
       display: flex; flex-direction: column; gap: 12px; align-items: center;
@@ -154,8 +154,7 @@ const INITIAL_PRODUCTS = [
     stock: 150,
     image: "public/assets/mini_usb_lamp.png",
     headline: "Ilumina tu velador toda la noche por menos de $1 al mes de electricidad.",
-    description: "Conéctala a cualquier cargador, power bank o notebook y listo. Sin cables, sin complicaciones. Disponible en Luz Cálida y Blanca.",
-    variants: ["Luz Cálida (relax)", "Luz Blanca (lectura)"],
+    description: "Conéctala a cualquier cargador, power bank o notebook y listo. Sin cables, sin complicaciones. Iluminación nocturna directa.",
     specs: ["Plug & Play USB directo", "Solo 1W de consumo", "Luz antideslumbrante"]
   },
   {
@@ -170,7 +169,6 @@ const INITIAL_PRODUCTS = [
     image: "public/assets/powerbank.png",
     headline: "5 cargas completas sin buscar enchufe. Pantalla LED de porcentaje en tiempo real.",
     description: "Batería externa portátil de alta capacidad de 20.000mAh con pantalla digital LED, múltiples puertos USB de carga súper rápida y acabado matte de gran durabilidad.",
-    variants: ["Negro Matte Cyber", "Plata Titanio"],
     specs: ["Pantalla digital LED de % real", "Carga ultra rápida multipuerto", "Capacidad real 20.000mAh"]
   },
   {
@@ -185,7 +183,6 @@ const INITIAL_PRODUCTS = [
     image: "public/assets/charger.jpg",
     headline: "Del 0% al 50% en solo 20 minutos. Y cabe en tu bolsillo.",
     description: "Carga tu notebook, tablet y smartphone al mismo tiempo. Tecnología GaN III que no genera calor.",
-    variants: ["Negro Matte", "Blanco Pro"],
     specs: ["Tecnología GaN III", "Carga 3 dispositivos simultáneos", "Salida 65W Turbo"]
   },
   {
@@ -200,7 +197,6 @@ const INITIAL_PRODUCTS = [
     image: "public/assets/dock.jpg",
     headline: "Imprime fotos, etiquetas y notas de estudio al instante desde tu celular. ¡Sin usar tinta!",
     description: "Impresora térmica de bolsillo ultra compacta que se conecta por Bluetooth. Ideal para estudiantes y organizadores.",
-    variants: ["Rosa Pastel", "Azul Sky", "Blanco Nieve"],
     specs: ["Sin tinta (tecnología térmica)", "Conexión Bluetooth iOS/Android", "Incluye 1 rollo adhesivo"]
   },
   {
@@ -215,7 +211,6 @@ const INITIAL_PRODUCTS = [
     image: "public/assets/headphones.jpg",
     headline: "Sonido HD de alta definición y batería para toda la semana.",
     description: "Bluetooth 5.3 de baja latencia, estuche de carga USB-C ultraliviano y micrófonos con cancelación de ruido de llamadas.",
-    variants: ["Negro Sigilo", "Blanco Puro"],
     specs: ["Bluetooth 5.3 HD", "Autonomía 28 horas", "Resistencia al agua IPX4"]
   },
   {
@@ -230,7 +225,6 @@ const INITIAL_PRODUCTS = [
     image: "public/assets/hub.jpg",
     headline: "Conecta monitor 4K, internet, pendrive y carga tu notebook con 1 solo puerto.",
     description: "Transforma el puerto USB-C de tu equipo en 8 salidas: HDMI 4K, Ethernet RJ45 Gigabit, 3x USB 3.0, Lector SD/TF y PD 100W.",
-    variants: ["Gris Espacial", "Plata Anodizada"],
     specs: ["Salida HDMI 4K UHD", "Puerto Ethernet Gigabit 1000Mbps", "Chasis de aluminio aeroespacial"]
   },
   {
@@ -245,7 +239,6 @@ const INITIAL_PRODUCTS = [
     image: "public/assets/cable.jpg",
     headline: "Te MUESTRA en pantalla cuántos watts está recibiendo tu dispositivo en tiempo real.",
     description: "Construcción en nylon trenzado militar ultra resistente. Pantalla digital que verifica la velocidad real de carga.",
-    variants: ["Largo 1.2 Metros", "Largo 2.0 Metros"],
     specs: ["Potencia 100W Power Delivery", "Pantalla LED en tiempo real", "Nylon trenzado indestructible"]
   },
   {
@@ -260,7 +253,6 @@ const INITIAL_PRODUCTS = [
     image: "public/assets/lamp.jpg",
     headline: "Ambienta tu escritorio o TV con millones de colores controlados desde tu celular.",
     description: "Tira LED RGB autoadhesiva con conexión USB directa y control por aplicación móvil o control remoto.",
-    variants: ["Largo 2 Metros", "Largo 5 Metros"],
     specs: ["Control por App & Bluetooth", "16 millones de colores RGB", "Sincronización con música"]
   },
   {
@@ -275,7 +267,6 @@ const INITIAL_PRODUCTS = [
     image: "public/assets/hub.jpg",
     headline: "Evita dolores de cuello y mantiene tu computador frío mientras trabajas.",
     description: "Estructura de aluminio anodizado con 6 niveles de inclinación ajustable y almohadillas de silicona antideslizantes.",
-    variants: ["Plata Anodizada", "Gris Espacial"],
     specs: ["Aluminio ultraliviano plegable", "6 niveles de altura ajustable", "Mejora la ventilación del equipo"]
   }
 ];
@@ -301,7 +292,6 @@ function App() {
   const [search, setSearch] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const [cart, setCart] = useState([]);
-  const [selectedVariants, setSelectedVariants] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [checkoutStep, setCheckStep] = useState('shipping');
@@ -371,15 +361,10 @@ function App() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const handleVariantSelect = (productId, variantName) => {
-    setSelectedVariants(prev => ({ ...prev, [productId]: variantName }));
-  };
-
   const addToCart = (p, e) => {
     e?.stopPropagation();
-    const chosenVariant = selectedVariants[p.id] || (p.variants ? p.variants[0] : null);
-    const itemKey = chosenVariant ? `${p.id}-${chosenVariant}` : p.id;
-    const itemTitle = chosenVariant ? `${p.name.split('—')[0].trim()} (${chosenVariant})` : p.name;
+    const itemKey = p.id;
+    const itemTitle = p.name;
     setCart(prev => {
       const found = prev.find(i => i.itemKey === itemKey);
       if (found) return prev.map(i => i.itemKey === itemKey ? { ...i, quantity: i.quantity + 1 } : i);
@@ -588,7 +573,6 @@ function App() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {filtered.map(p => {
-                  const selectedVariant = selectedVariants[p.id] || (p.variants ? p.variants[0] : null);
                   return (
                     <div key={p.id} onClick={() => setSelectedProdModal(p)}
                       className="card glass p-4 rounded-2xl flex flex-col justify-between cursor-pointer relative">
@@ -607,15 +591,6 @@ function App() {
                           <span>⭐ {p.rating}</span>
                           <span className="text-slate-400 text-[10px]">({p.reviewsCount} opiniones)</span>
                         </div>
-
-                        {p.variants && (
-                          <div className="mb-3" onClick={e => e.stopPropagation()}>
-                            <select value={selectedVariant} onChange={e => handleVariantSelect(p.id, e.target.value)}
-                              className="field py-1 text-[11px]">
-                              {p.variants.map(v => <option key={v} value={v}>{v}</option>)}
-                            </select>
-                          </div>
-                        )}
 
                         <div className="text-[11px] font-semibold text-emerald-400 mb-2">
                           {p.stock < 40 ? `🔥 ¡Últimas ${p.stock} unidades!` : `✓ Stock disponible`}
@@ -691,16 +666,6 @@ function App() {
                 <div className="font-black text-cyan-400 text-lg">{fmtCLP(selectedProdModal.price)}
                   {selectedProdModal.oldPrice && <span className="text-sm text-slate-500 line-through ml-2">{fmtCLP(selectedProdModal.oldPrice)}</span>}
                 </div>
-                
-                {selectedProdModal.variants && (
-                  <div>
-                    <label className="font-bold text-slate-300 block mb-1">Elige tu opción:</label>
-                    <select value={selectedVariants[selectedProdModal.id] || selectedProdModal.variants[0]}
-                      onChange={e => handleVariantSelect(selectedProdModal.id, e.target.value)} className="field">
-                      {selectedProdModal.variants.map(v => <option key={v} value={v}>{v}</option>)}
-                    </select>
-                  </div>
-                )}
 
                 <button onClick={() => { addToCart(selectedProdModal); setSelectedProdModal(null); }}
                   className="w-full grad-btn py-2.5 text-xs mt-3">+ Agregar al Carrito</button>
