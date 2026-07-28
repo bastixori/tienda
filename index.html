@@ -25,7 +25,7 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
 
-  <!-- Schema.org JSON-LD Structured Data for Google SEO (100/100) -->
+  <!-- Schema.org JSON-LD Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -306,7 +306,7 @@ function App() {
         if (data.products && data.products.length > 0) setProducts(data.products);
       }
     } catch (e) {
-      console.log('Modo GitHub Pages / Offline: usando catálogo estático inicial');
+      // Modo demo
     }
   }, []);
 
@@ -323,68 +323,32 @@ function App() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginForm)
-      });
-      const data = await res.json();
-      if (res.ok) {
-        sessionStorage.setItem('tc_token', data.token);
-        setAdminToken(data.token);
-        setShowLogin(false);
-        setIsAdmin(true);
-        showToast('¡Sesión admin iniciada!');
-        return;
-      }
-    } catch (err) {
-      if (loginForm.username === 'admin' && loginForm.password === 'TecnoCalidad2026!') {
-        sessionStorage.setItem('tc_token', 'demo_token');
-        setAdminToken('demo_token');
-        setShowLogin(false);
-        setIsAdmin(true);
-        showToast('¡Sesión admin demo iniciada!');
-        return;
-      }
+    if (loginForm.username === 'admin' && loginForm.password === 'TecnoCalidad2026!') {
+      sessionStorage.setItem('tc_token', 'demo_token');
+      setAdminToken('demo_token');
+      setShowLogin(false);
+      setIsAdmin(true);
+      showToast('¡Sesión admin iniciada!');
+      return;
     }
     showToast('Credenciales incorrectas');
   };
 
-  const handleCompleteOrder = async (e) => {
+  // Completar orden 100% visualmente (sin redirecciones externas)
+  const handleCompleteOrder = (e) => {
     e.preventDefault();
     const rawSubtotal = cart.reduce((a, b) => a + b.price * b.quantity, 0);
     const shipping_fee = rawSubtotal * 1000 >= 50000 ? 0 : 3.990;
     const finalTotal = rawSubtotal + shipping_fee;
 
-    let gatewayData = {};
-    try {
-      const res = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          customer_name: shipping.name,
-          customer_email: shipping.email,
-          customer_phone: shipping.phone,
-          address: shipping.address,
-          city: shipping.city,
-          payment_method: payMethod,
-          items: cart,
-          total: finalTotal
-        })
-      });
-      if (res.ok) gatewayData = await res.json();
-    } catch (err) {
-      console.log('Modo demo checkout completado localmente');
-    }
-
-    setCreatedOrder({
-      id: gatewayData.order_id || `TC-${Math.floor(100000 + Math.random() * 900000)}`,
+    const newOrd = {
+      id: `TC-${Math.floor(100000 + Math.random() * 900000)}`,
       total: finalTotal,
       customer: shipping.name,
-      gatewayUrl: payMethod === 'webpay' ? gatewayData.webpay_url : gatewayData.mercadopago_url
-    });
+      method: payMethod === 'webpay' ? 'Webpay Plus (Transbank)' : payMethod === 'mercadopago' ? 'Mercado Pago Chile' : 'Stripe International'
+    };
 
+    setCreatedOrder(newOrd);
     setCart([]);
     setCheckStep('confirmation');
     if (window.confetti) window.confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
@@ -411,7 +375,7 @@ function App() {
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center text-black font-black text-lg">⚡</div>
           <div className="text-left">
             <div className="text-lg font-extrabold text-white leading-none">TECNO <span className="grad-text">CALIDAD</span></div>
-            <div className="text-[9px] font-bold text-cyan-400 tracking-widest uppercase">100/100 E-Commerce & Tech Suppliers</div>
+            <div className="text-[9px] font-bold text-cyan-400 tracking-widest uppercase">Proveedores AliExpress & Tech Direct</div>
           </div>
         </button>
 
@@ -458,7 +422,7 @@ function App() {
             <div className="max-w-6xl mx-auto px-5">
               <div className="glass p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
                 <div className="max-w-xl">
-                  <span className="badge inline-block mb-3">⚡ 100/100 E-Commerce & Garantía Oficial</span>
+                  <span className="badge inline-block mb-3">⚡ AliExpress Suppliers Direct & Calidad Garantizada</span>
                   <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-3">
                     Cargadores, Adaptadores & <span className="grad-text">Repuestos Tech</span>
                   </h1>
@@ -501,7 +465,6 @@ function App() {
                     <h3 className="text-sm font-bold text-white line-clamp-2 mb-1">{p.name}</h3>
                     <p className="text-xs text-slate-400 line-clamp-2 mb-2">{p.description}</p>
                     
-                    {/* Stock alert (100/100 UX) */}
                     <div className="text-[11px] font-semibold text-emerald-400 mb-2">
                       {p.stock < 35 ? `🔥 ¡Últimas ${p.stock} unidades!` : `✓ Stock disponible (${p.stock} u.)`}
                     </div>
@@ -523,11 +486,11 @@ function App() {
       ) : (
         /* ADMIN DASHBOARD */
         <main className="flex-1 max-w-6xl w-full mx-auto p-6">
-          <h1 className="text-2xl font-black text-white mb-4">Panel TecnoCalidad 100/100</h1>
+          <h1 className="text-2xl font-black text-white mb-4">Panel TecnoCalidad</h1>
           <div className="glass p-6 rounded-2xl space-y-4">
             <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-bold text-white">Productos en BD ({products.length})</h3>
-              <span className="text-xs text-emerald-400 font-bold">Pasarelas Activas: Webpay Plus · Mercado Pago · Stripe</span>
+              <h3 className="text-sm font-bold text-white">Productos en Catálogo ({products.length})</h3>
+              <span className="text-xs text-emerald-400 font-bold">Pasarelas Visuales: Webpay Plus · Mercado Pago · Stripe</span>
             </div>
             <div className="space-y-2 text-xs">
               {products.map(p => (
@@ -543,7 +506,7 @@ function App() {
 
       {/* FOOTER */}
       <footer className="mt-auto border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} TecnoCalidad 100/100 · Transbank Webpay Plus · Mercado Pago · Stripe
+        © {new Date().getFullYear()} TecnoCalidad · Opciones de Pago Visuales Webpay Plus / Mercado Pago / Stripe
       </footer>
 
       {/* CART DRAWER */}
@@ -579,7 +542,7 @@ function App() {
         </div>
       )}
 
-      {/* CHECKOUT MODAL (100/100 PRODUCTION) */}
+      {/* CHECKOUT MODAL (VISUAL COMPOSITION - NO EXTERNAL REDIRECTS) */}
       {checkoutOpen && (
         <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
           <div className="glass w-full max-w-md bg-slate-900 p-6 rounded-2xl relative">
@@ -588,7 +551,7 @@ function App() {
             )}
             {checkoutStep === 'shipping' && (
               <form onSubmit={() => setCheckStep('payment')} className="space-y-3 text-xs">
-                <h3 className="font-bold text-cyan-400 uppercase">Datos de Envío</h3>
+                <h3 className="font-bold text-cyan-400 uppercase">1. Datos de Envío</h3>
                 <input type="text" required value={shipping.name} onChange={e => setShipping({...shipping, name: e.target.value})} className="field" placeholder="Nombre completo" />
                 <input type="email" required value={shipping.email} onChange={e => setShipping({...shipping, email: e.target.value})} className="field" placeholder="Correo electrónico" />
                 <input type="text" required value={shipping.address} onChange={e => setShipping({...shipping, address: e.target.value})} className="field" placeholder="Dirección completa" />
@@ -598,27 +561,31 @@ function App() {
 
             {checkoutStep === 'payment' && (
               <form onSubmit={handleCompleteOrder} className="space-y-3 text-xs">
-                <h3 className="font-bold text-cyan-400 uppercase">Método de Pago Real</h3>
+                <h3 className="font-bold text-cyan-400 uppercase">2. Selección de Medio de Pago</h3>
                 <div className="space-y-2">
-                  <label onClick={() => setPayMethod('webpay')} className={`block p-3 rounded-xl border cursor-pointer ${payMethod === 'webpay' ? 'border-cyan-400 bg-cyan-500/10 font-bold' : 'border-slate-800 bg-slate-950'}`}>
+                  <label onClick={() => setPayMethod('webpay')} className={`block p-3 rounded-xl border cursor-pointer transition-all ${payMethod === 'webpay' ? 'border-cyan-400 bg-cyan-500/10 font-bold text-white' : 'border-slate-800 bg-slate-950 text-slate-300'}`}>
                     💳 Transbank Webpay Plus (Débito/Crédito Chile)
                   </label>
-                  <label onClick={() => setPayMethod('mercadopago')} className={`block p-3 rounded-xl border cursor-pointer ${payMethod === 'mercadopago' ? 'border-cyan-400 bg-cyan-500/10 font-bold' : 'border-slate-800 bg-slate-950'}`}>
+                  <label onClick={() => setPayMethod('mercadopago')} className={`block p-3 rounded-xl border cursor-pointer transition-all ${payMethod === 'mercadopago' ? 'border-cyan-400 bg-cyan-500/10 font-bold text-white' : 'border-slate-800 bg-slate-950 text-slate-300'}`}>
                     📱 Mercado Pago Chile (Dinero en Cuenta / Tarjetas)
                   </label>
-                  <label onClick={() => setPayMethod('stripe')} className={`block p-3 rounded-xl border cursor-pointer ${payMethod === 'stripe' ? 'border-cyan-400 bg-cyan-500/10 font-bold' : 'border-slate-800 bg-slate-950'}`}>
+                  <label onClick={() => setPayMethod('stripe')} className={`block p-3 rounded-xl border cursor-pointer transition-all ${payMethod === 'stripe' ? 'border-cyan-400 bg-cyan-500/10 font-bold text-white' : 'border-slate-800 bg-slate-950 text-slate-300'}`}>
                     🔒 Stripe International (Visa / Mastercard)
                   </label>
                 </div>
-                <button type="submit" className="w-full grad-btn py-3 mt-2">Confirmar y Pagar {fmtCLP(totPay)}</button>
+                <button type="submit" className="w-full grad-btn py-3 mt-2">Simular Pago & Confirmar {fmtCLP(totPay)}</button>
               </form>
             )}
 
             {checkoutStep === 'confirmation' && createdOrder && (
               <div className="text-center py-6 space-y-3 text-xs">
                 <div className="text-3xl text-emerald-400">✓</div>
-                <h3 className="text-lg font-black text-white">¡Compra Procesada con Éxito!</h3>
-                <p className="text-slate-400">Orden {createdOrder.id} registrada en TecnoCalidad.</p>
+                <h3 className="text-lg font-black text-white">¡Orden Demo Confirmada!</h3>
+                <p className="text-slate-400">Orden {createdOrder.id} procesada con {createdOrder.method}.</p>
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-left font-semibold">
+                  <div>Cliente: {createdOrder.customer}</div>
+                  <div className="text-cyan-400 font-bold mt-1">Total: {fmtCLP(createdOrder.total)}</div>
+                </div>
                 <button onClick={() => { setCheckoutOpen(false); setCheckStep('shipping'); }} className="grad-btn px-6 py-2">
                   Volver a la Tienda
                 </button>
