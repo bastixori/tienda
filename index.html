@@ -58,7 +58,6 @@
     .card { transition: transform .3s, border-color .3s, box-shadow .3s; }
     .card:hover { transform: translateY(-5px); border-color: var(--border-glow); box-shadow: 0 12px 30px rgba(0,240,255,.18); }
     .badge { background:rgba(0,240,255,.12); color:#00f0ff; border:1px solid rgba(0,240,255,.3); padding:2px 9px; border-radius:999px; font-size:.7rem; font-weight:800; }
-    .badge-hot { background:rgba(239,68,68,.15); color:#f87171; border:1px solid rgba(239,68,68,.4); }
     .toast {
       position:fixed; bottom:22px; right:22px; z-index:200;
       background:#0f172a; border:1px solid var(--cyan); color:#fff;
@@ -88,20 +87,29 @@
     }
     .social-proof.hiding { animation: slideOutLeft .4s ease-in forwards; }
 
-    /* WhatsApp Button */
-    .wa-btn {
-      position: fixed; bottom: 22px; left: 22px; z-index: 150;
-      width: 56px; height: 56px; border-radius: 50%;
-      background: #25D366; border: none; cursor: pointer;
-      box-shadow: 0 4px 15px rgba(37,211,102,.4);
-      display: flex; align-items: center; justify-content: center;
-      transition: transform .2s, box-shadow .2s;
-      font-size: 28px;
+    /* Floating Social Bar (WhatsApp + Instagram) */
+    .floating-social-bar {
+      position: fixed; bottom: 22px; right: 22px; z-index: 170;
+      display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
     }
-    .wa-btn:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(37,211,102,.6); }
-
-    /* Countdown */
-    .countdown { font-variant-numeric: tabular-nums; }
+    .social-fab {
+      display: flex; items-center; gap: 8px; padding: 10px 16px; border-radius: 999px;
+      color: #fff; font-weight: 700; font-size: 0.8rem; text-decoration: none;
+      box-shadow: 0 8px 25px rgba(0,0,0,.4);
+      transition: transform .25s ease, box-shadow .25s ease;
+      backdrop-filter: blur(10px);
+    }
+    .social-fab:hover { transform: translateY(-3px) scale(1.03); }
+    .social-fab-wa {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      box-shadow: 0 6px 20px rgba(37,211,102,.35);
+    }
+    .social-fab-wa:hover { box-shadow: 0 8px 25px rgba(37,211,102,.55); }
+    .social-fab-ig {
+      background: linear-gradient(135deg, #833AB4, #FD1D1D, #F56040);
+      box-shadow: 0 6px 20px rgba(253,29,29,.35);
+    }
+    .social-fab-ig:hover { box-shadow: 0 8px 25px rgba(253,29,29,.55); }
 
     /* Trust badges */
     .trust-bar { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -124,7 +132,6 @@ const fmtCLP = (n) =>
 
 const CATEGORIES = [
   'Todos',
-  '🔥 Hot Sale',
   'Lámparas Recargables',
   'Cargadores & Baterías',
   'Adaptadores & Hubs',
@@ -135,7 +142,7 @@ const CATEGORIES = [
 ];
 
 /* ═══════════════════════════════════════════════════════
-   COPYWRITING EMOCIONAL: Beneficios, no especificaciones
+   PRODUCTOS LIMPIOS SIN BADGES NI HOT SALE
    ═══════════════════════════════════════════════════════ */
 const INITIAL_PRODUCTS = [
   {
@@ -147,7 +154,6 @@ const INITIAL_PRODUCTS = [
     rating: 4.98,
     reviewsCount: 340,
     stock: 150,
-    badge: "🔥 HOT SALE",
     image: "public/assets/mini_usb_lamp.png",
     headline: "Ilumina tu velador toda la noche por menos de $1 al mes de electricidad.",
     description: "Conéctala a cualquier cargador, power bank o notebook y listo. Sin cables, sin complicaciones. Elige entre luz cálida para dormir o blanca para leer.",
@@ -163,7 +169,6 @@ const INITIAL_PRODUCTS = [
     rating: 4.92,
     reviewsCount: 145,
     stock: 50,
-    badge: "🔥 HOT SALE",
     image: "public/assets/charger.jpg",
     headline: "Del 0% al 50% en solo 20 minutos. Y cabe en tu bolsillo.",
     description: "Olvídate de cargar los cargadores enormes. Este es más chico que un naipe y carga tu notebook, tablet y celular a la vez. No se calienta gracias a la tecnología GaN.",
@@ -179,7 +184,6 @@ const INITIAL_PRODUCTS = [
     rating: 4.89,
     reviewsCount: 98,
     stock: 40,
-    badge: "🔥 HOT SALE",
     image: "public/assets/powerbank.jpg",
     headline: "5 cargas completas de tu iPhone sin buscar un enchufe. Pégala magnéticamente y listo.",
     description: "Se pega magnéticamente a tu celular. La pantalla te muestra el porcentaje exacto. Nunca más te quedas sin batería en la calle, en un viaje o en la pega.",
@@ -195,7 +199,6 @@ const INITIAL_PRODUCTS = [
     rating: 4.95,
     reviewsCount: 180,
     stock: 35,
-    badge: "OFICINA TOP",
     image: "public/assets/hub.jpg",
     headline: "Conecta monitor, internet, pendrive y carga tu notebook con UN solo cable.",
     description: "Transforma el único USB-C de tu notebook en 8 puertos. Pantalla 4K, internet por cable, lector de tarjetas SD y carga de 100W sin desconectar nada.",
@@ -211,7 +214,6 @@ const INITIAL_PRODUCTS = [
     rating: 4.8,
     reviewsCount: 310,
     stock: 100,
-    badge: "PACK x2",
     image: "public/assets/hub.jpg",
     headline: "Pasa archivos del pendrive a tu celular en segundos. Sin internet, sin apps.",
     description: "¿Necesitas pasar fotos, documentos o música del pendrive al celular? Conéctalo directamente. También sirve para mouse, teclado o control de juegos.",
@@ -227,7 +229,6 @@ const INITIAL_PRODUCTS = [
     rating: 4.85,
     reviewsCount: 42,
     stock: 60,
-    badge: "REPUESTO",
     image: "public/assets/lamp.jpg",
     headline: "Mueve tu lámpara del velador a la cocina, al baño o al closet. Sin tornillos.",
     description: "Adhesivo 3M industrial que pega en cualquier superficie lisa. Imán N52 ultra fuerte que sostiene tu lámpara sin que se caiga. Instálalo en 10 segundos.",
@@ -243,7 +244,6 @@ const INITIAL_PRODUCTS = [
     rating: 4.9,
     reviewsCount: 29,
     stock: 20,
-    badge: "ORIGINAL",
     image: "public/assets/charger.jpg",
     headline: "No tires tu gadget. Cámbiale la batería y queda como nuevo.",
     description: "Celda original de litio con protección contra sobrecarga incluida. Compatible con lámparas recargables, parlantes portátiles y dispositivos con conector JST.",
@@ -259,7 +259,6 @@ const INITIAL_PRODUCTS = [
     rating: 4.8,
     reviewsCount: 94,
     stock: 40,
-    badge: "🔥 HOT SALE",
     image: "public/assets/cable.jpg",
     headline: "Te MUESTRA en pantalla cuántos watts está recibiendo tu dispositivo. En tiempo real.",
     description: "¿Tu celular carga lento y no sabes por qué? Este cable tiene una pantalla LED que te muestra si estás cargando a 5W, 20W o 100W. Trenzado de nylon indestructible.",
@@ -275,7 +274,6 @@ const INITIAL_PRODUCTS = [
     rating: 4.95,
     reviewsCount: 210,
     stock: 12,
-    badge: "PREMIUM",
     image: "public/assets/headphones.jpg",
     headline: "Cancela el ruido del metro, la oficina y los vecinos. 60 horas sin cargar.",
     description: "Ponte estos audífonos y el mundo desaparece. Cancelación de ruido de -45dB, sonido Hi-Res certificado y una batería que dura toda la semana laboral sin cargar.",
@@ -291,7 +289,6 @@ const INITIAL_PRODUCTS = [
     rating: 4.88,
     reviewsCount: 76,
     stock: 18,
-    badge: "NUEVO",
     image: "public/assets/dock.jpg",
     headline: "Celular, reloj y audífonos. Todo cargado cuando suena la alarma.",
     description: "Deja tu iPhone, Apple Watch y AirPods en la estación antes de dormir. Cuando despiertes, todo está al 100%. Luz ambiental suave que no molesta de noche.",
@@ -341,9 +338,6 @@ function App() {
   const [socialHiding, setSocialHiding] = useState(false);
   const socialIdx = useRef(0);
 
-  // Countdown timer state (Hot Sale ends in ~6 hours from page load)
-  const [countdown, setCountdown] = useState({ h: 5, m: 59, s: 59 });
-
   const [shipping, setShipping] = useState({
     name: '', email: '', phone: '', address: '', city: 'Santiago'
   });
@@ -370,40 +364,21 @@ function App() {
   useEffect(() => {
     const showNext = () => {
       const data = SOCIAL_PROOF_DATA[socialIdx.current % SOCIAL_PROOF_DATA.length];
-      // Randomize minutes for realism
       const mins = Math.floor(Math.random() * 12) + 1;
       setSocialHiding(false);
       setSocialProof({ ...data, mins });
       socialIdx.current++;
 
-      // Hide after 4 seconds
       setTimeout(() => {
         setSocialHiding(true);
         setTimeout(() => setSocialProof(null), 400);
       }, 4500);
     };
 
-    // First notification after 8 seconds
     const first = setTimeout(showNext, 8000);
-    // Then every 18-25 seconds
     const interval = setInterval(showNext, 18000 + Math.random() * 7000);
 
     return () => { clearTimeout(first); clearInterval(interval); };
-  }, []);
-
-  /* ═════════════════════
-     COUNTDOWN TIMER ENGINE
-     ═════════════════════ */
-  useEffect(() => {
-    const endTime = Date.now() + (6 * 60 * 60 * 1000); // 6 hours from now
-    const tick = setInterval(() => {
-      const diff = Math.max(0, endTime - Date.now());
-      const h = Math.floor(diff / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      setCountdown({ h, m, s });
-    }, 1000);
-    return () => clearInterval(tick);
   }, []);
 
   const handleLogoClick = () => {
@@ -470,7 +445,6 @@ function App() {
   ).slice(0, 4) : [];
 
   const filtered = products.filter(p => {
-    if (category === '🔥 Hot Sale') return p.badge?.includes('HOT SALE');
     const catOk = category === 'Todos' || p.category === category;
     const srchOk = !search || p.name.toLowerCase().includes(search.toLowerCase()) || (p.description || '').toLowerCase().includes(search.toLowerCase());
     return catOk && srchOk;
@@ -480,7 +454,6 @@ function App() {
   const rawSub = cart.reduce((a, b) => a + b.price * b.quantity, 0);
   const shipFee = (rawSub * 1000 >= 50000 || !cart.length) ? 0 : 3.990;
   const totPay = rawSub + shipFee;
-  const pad = (n) => String(n).padStart(2, '0');
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -506,11 +479,35 @@ function App() {
         </div>
       )}
 
-      {/* ═══ WHATSAPP FLOATING BUTTON ═══ */}
-      {!socialProof && !isAdmin && (
-        <a href="https://wa.me/56912345678?text=Hola%2C%20vi%20un%20producto%20en%20TecnoCalidad%20y%20tengo%20una%20consulta" target="_blank" rel="noopener noreferrer" className="wa-btn" title="¿Dudas? Escríbenos por WhatsApp">
-          💬
-        </a>
+      {/* ═══ FLOATING SOCIAL BAR (WHATSAPP + INSTAGRAM) ═══ */}
+      {!isAdmin && (
+        <div className="floating-social-bar">
+          <a
+            href="https://instagram.com/tecnocalidad.cl"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="social-fab social-fab-ig"
+            title="Síguenos en Instagram @tecnocalidad.cl"
+          >
+            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+            <span>Instagram</span>
+          </a>
+
+          <a
+            href="https://wa.me/56912345678?text=Hola%2C%20vi%20un%20producto%20en%20TecnoCalidad%20y%20tengo%20una%20consulta"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="social-fab social-fab-wa"
+            title="¿Dudas? Escríbenos por WhatsApp"
+          >
+            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+            </svg>
+            <span>WhatsApp</span>
+          </a>
+        </div>
       )}
 
       {/* HEADER */}
@@ -565,12 +562,12 @@ function App() {
 
       {!isAdmin ? (
         <main className="flex-1">
-          {/* HERO + COUNTDOWN */}
+          {/* HERO BANNER LIMPIO */}
           <section className="border-b border-slate-800/60 pt-6 pb-8">
             <div className="max-w-6xl mx-auto px-5">
               <div className="glass p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
                 <div className="max-w-xl">
-                  <span className="badge badge-hot inline-block mb-3">🔥 Hot Sale — Oferta termina en <span className="countdown">{pad(countdown.h)}h : {pad(countdown.m)}m : {pad(countdown.s)}s</span></span>
+                  <span className="badge inline-block mb-3">⚡ Calidad Garantizada & Despacho a todo Chile</span>
                   <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-3">
                     Tecnología que <span className="grad-text">resuelve tu día</span>
                   </h1>
@@ -578,7 +575,7 @@ function App() {
                     Carga más rápido. Conecta todo. Ilumina sin cables. Directo de fábrica a tu puerta.
                   </p>
 
-                  {/* ═══ TRUST BADGES ═══ */}
+                  {/* TRUST BADGES */}
                   <div className="trust-bar">
                     <div className="trust-badge">🛡️ Garantía 12 meses</div>
                     <div className="trust-badge">🚚 Envío gratis sobre $50.000</div>
@@ -594,8 +591,6 @@ function App() {
                     className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${
                       category === cat
                         ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-black border-cyan-300 shadow-md'
-                        : cat === '🔥 Hot Sale'
-                        ? 'bg-rose-500/20 text-rose-400 border-rose-500/40 hover:bg-rose-500/30'
                         : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-600'
                     }`}>
                     {cat}
@@ -605,7 +600,7 @@ function App() {
             </div>
           </section>
 
-          {/* PRODUCT GRID */}
+          {/* PRODUCT GRID LIMPIO */}
           <section className="max-w-6xl mx-auto px-5 py-8">
             {filtered.length === 0 ? (
               <div className="glass p-12 rounded-2xl text-center text-slate-400">
@@ -623,12 +618,10 @@ function App() {
                       <div>
                         <div className="relative aspect-square rounded-xl overflow-hidden bg-slate-950 mb-3">
                           <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
-                          {p.badge && <span className={`absolute top-2 left-2 badge ${p.badge.includes('HOT') ? 'badge-hot' : ''}`}>{p.badge}</span>}
                         </div>
                         <div className="text-[10px] font-bold text-cyan-400 uppercase mb-1">{p.category}</div>
                         <h3 className="text-sm font-bold text-white line-clamp-2 mb-1">{p.name}</h3>
                         
-                        {/* HEADLINE EMOCIONAL */}
                         {p.headline && (
                           <p className="text-[11px] text-slate-300 italic mb-2 line-clamp-2">"{p.headline}"</p>
                         )}
@@ -660,7 +653,6 @@ function App() {
                           </div>
                           <button onClick={(e) => addToCart(p, e)} className="grad-btn px-3 py-1.5 text-xs rounded-xl">+ Agregar</button>
                         </div>
-                        {/* MINI TRUST BADGES PER CARD */}
                         <div className="flex gap-1 text-[9px] text-slate-500">
                           <span>🛡️ Garantía</span>
                           <span>·</span>
