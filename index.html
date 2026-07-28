@@ -3,44 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TecnoCalidad | Tienda de Alta Tecnología, Cargadores, Adaptadores & Repuestos</title>
+  <title>TecnoCalidad | Gadgets, Cargadores, Adaptadores & Repuestos Tech</title>
   <meta name="description" content="E-commerce oficial TecnoCalidad: Lámparas recargables USB-C, cargadores GaN 65W, baterías externas MagSafe, adaptadores Hub USB-C 8 en 1 y repuestos tech." />
-  <meta name="keywords" content="tecnocalidad, e-commerce, cargadores gan, lamparas usb recargables, adaptadores hub usb-c, repuestos lamparas" />
-  <meta name="author" content="TecnoCalidad" />
-
-  <!-- OpenGraph / Social Media SEO -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://bastixori.github.io/tienda/" />
-  <meta property="og:title" content="TecnoCalidad | Alta Tecnología & Gadgets Recargables" />
-  <meta property="og:description" content="Lámparas USB recargables, cargadores GaN 65W, adaptadores Hub USB-C y repuestos con envío a todo Chile." />
-  <meta property="og:image" content="https://bastixori.github.io/tienda/public/assets/mini_usb_lamp.png" />
-
-  <!-- Twitter Card SEO -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="TecnoCalidad | Gadgets & Tecnología" />
-  <meta name="twitter:description" content="Compra tecnología directa de proveedores con garantía oficial." />
-
-  <!-- Security & Favicon -->
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
-
-  <!-- Schema.org JSON-LD Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "OnlineStore",
-    "name": "TecnoCalidad",
-    "url": "https://bastixori.github.io/tienda/",
-    "logo": "https://bastixori.github.io/tienda/public/assets/mini_usb_lamp.png",
-    "description": "Tienda de alta tecnología, cargadores, adaptadores y repuestos tech.",
-    "priceRange": "$$",
-    "paymentAccepted": "Webpay Plus, Mercado Pago, Stripe, Visa, Mastercard",
-    "currenciesAccepted": "CLP, USD"
-  }
-  </script>
-
-  <!-- Fonts & Styling -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -107,13 +74,14 @@
 <div id="root"></div>
 
 <script type="text/babel">
-const { useState, useEffect, useCallback } = React;
+const { useState, useEffect, useCallback, useRef } = React;
 
 const fmtCLP = (n) =>
   new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP',maximumFractionDigits:0}).format(n * 1000);
 
 const CATEGORIES = [
   'Todos',
+  '❤️ Favoritos',
   'Lámparas Recargables',
   'Cargadores & Baterías',
   'Adaptadores & Hubs',
@@ -126,7 +94,7 @@ const CATEGORIES = [
 const INITIAL_PRODUCTS = [
   {
     id: "prod-1",
-    name: "Mini Lámpara USB Portátil Redonda Noche (Cálida / Blanca)",
+    name: "Mini Lámpara USB Portátil Redonda Noche",
     category: "Lámparas Recargables",
     price: 4.990,
     oldPrice: 7.990,
@@ -135,8 +103,9 @@ const INITIAL_PRODUCTS = [
     stock: 150,
     badge: "MÁS VENDIDO ALIEXPRESS",
     image: "public/assets/mini_usb_lamp.png",
-    description: "Mini bombilla LED cilíndrica/redonda ultra compacta con conector USB directo. Disponible en Luz Cálida (Soft Warm) y Luz Blanca (Cool White). Ideal para Power Banks, cargadores, laptops o veladores.",
-    specs: ["Conector: USB Plug Directo", "Luz Cálida (3000K) / Luz Blanca (6500K)", "Consumo 1W de alta eficiencia", "Compatibilidad universal USB"]
+    description: "Mini bombilla LED cilíndrica/redonda ultra compacta con conector USB directo. Bajo consumo y luz antideslumbrante.",
+    variants: ["Luz Cálida (3000K)", "Luz Blanca (6500K)"],
+    specs: ["Conector: USB Plug Directo", "Consumo 1W de alta eficiencia", "Compatibilidad universal USB"]
   },
   {
     id: "prod-7",
@@ -150,7 +119,8 @@ const INITIAL_PRODUCTS = [
     badge: "CERO CALOR",
     image: "public/assets/charger.jpg",
     description: "Cargador de pared tecnología GaN Fast Charger 65W. Carga laptops, tablets y smartphones simultáneamente.",
-    specs: ["Tecnología GaN III", "Salida 65W Max", "2x USB-C + 1x USB-A", "Protección contra sobretemperatura"]
+    variants: ["Negro Matte Cyber", "Blanco Titanio Pro"],
+    specs: ["Tecnología GaN III", "Salida 65W Max", "2x USB-C + 1x USB-A"]
   },
   {
     id: "prod-8",
@@ -163,8 +133,9 @@ const INITIAL_PRODUCTS = [
     stock: 40,
     badge: "MAGSAFE FAST",
     image: "public/assets/powerbank.jpg",
-    description: "Power bank de alta densidad con carga rápida inalámbrica magnética y pantalla digital LED.",
-    specs: ["Capacidad 20,000mAh", "Carga Inalámbrica 15W", "Carga por Cable PD 22.5W", "Pantalla de batería %"]
+    description: "Power bank de alta densidad con carga rápida inalámbrica magnética y pantalla digital LED de porcentaje.",
+    variants: ["20.000 mAh (Turbo)", "10.000 mAh (Ultra Slim)"],
+    specs: ["Capacidad 20,000mAh", "Carga Inalámbrica 15W", "Pantalla de batería %"]
   },
   {
     id: "prod-9",
@@ -178,7 +149,8 @@ const INITIAL_PRODUCTS = [
     badge: "OFICINA TOP",
     image: "public/assets/hub.jpg",
     description: "Estación Hub multipuerto de aluminio con HDMI 4K, 3x USB 3.0, Lector SD/TF, Ethernet RJ45 y PD 100W.",
-    specs: ["Salida HDMI 4K@30Hz", "Ethernet 1000Mbps", "Pass-Through 100W PD", "Chasis de aluminio aeroespacial"]
+    variants: ["Gris Espacial", "Plata Anodizada"],
+    specs: ["Salida HDMI 4K@30Hz", "Ethernet 1000Mbps", "Pass-Through 100W PD"]
   },
   {
     id: "prod-10",
@@ -192,7 +164,8 @@ const INITIAL_PRODUCTS = [
     badge: "PACK x2",
     image: "https://images.unsplash.com/photo-1544652478-6653e09f18a2?auto=format&fit=crop&w=600&q=80",
     description: "Convertidor súper compacto OTG metálico para conectar pendrives, mouses o teclados a smartphones/laptops.",
-    specs: ["Velocidad 5Gbps USB 3.0", "Cuerpo de aleación de zinc", "Función Plug and Play", "Compatible con Android/Mac/PC"]
+    variants: ["Pack x2 Unidades", "Pack x4 Unidades"],
+    specs: ["Velocidad 5Gbps USB 3.0", "Cuerpo de aleación de zinc"]
   },
   {
     id: "prod-11",
@@ -206,7 +179,8 @@ const INITIAL_PRODUCTS = [
     badge: "REPUESTO REDONDO",
     image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=600&q=80",
     description: "Soporte magnético circular redonda de repuesto compatible con lámparas tipo disco recargables TecnoCalidad.",
-    specs: ["Imán Circular N52", "Cinta 3M VHB adhesiva", "Rotación multidireccional"]
+    variants: ["Negro Mate", "Blanco Puro"],
+    specs: ["Imán Circular N52", "Cinta 3M VHB adhesiva"]
   },
   {
     id: "prod-12",
@@ -220,7 +194,8 @@ const INITIAL_PRODUCTS = [
     badge: "ORIGINAL",
     image: "https://images.unsplash.com/photo-1619725002198-6a689b72f41d?auto=format&fit=crop&w=600&q=80",
     description: "Celda de batería de litio de alta capacidad con circuito de protección BMS de repuesto para gadgets tech.",
-    specs: ["Capacidad 5000mAh", "Protección contra sobrecarga", "Conector JST 2-pin standard"]
+    variants: ["5000 mAh Standard", "6500 mAh Long Life"],
+    specs: ["Capacidad 5000mAh", "Protección sobrecarga BMS"]
   },
   {
     id: "prod-2",
@@ -234,7 +209,8 @@ const INITIAL_PRODUCTS = [
     badge: "ALTA TECNOLOGÍA",
     image: "public/assets/cable.jpg",
     description: "Cable USB-C 100W con pantalla LED que muestra vatios en tiempo real.",
-    specs: ["100W Power Delivery", "480 Mbps transmisión", "1.5m trenzado nylon", "Pantalla digital LED"]
+    variants: ["Largo 1.2 Metros", "Largo 2.0 Metros"],
+    specs: ["100W Power Delivery", "480 Mbps transmisión", "Pantalla LED"]
   },
   {
     id: "prod-3",
@@ -248,7 +224,8 @@ const INITIAL_PRODUCTS = [
     badge: "CANCELACIÓN DE RUIDO",
     image: "public/assets/headphones.jpg",
     description: "Over-Ear ANC -45dB, Hi-Res Audio, Bluetooth 5.4, 60h de autonomía.",
-    specs: ["ANC Híbrido -45dB", "60h autonomía", "Bluetooth 5.4 + AUX 3.5mm", "Carga rápida 10 min"]
+    variants: ["Negro Grafito", "Plata Estelar"],
+    specs: ["ANC Híbrido -45dB", "60h autonomía", "Bluetooth 5.4"]
   },
   {
     id: "prod-4",
@@ -262,7 +239,8 @@ const INITIAL_PRODUCTS = [
     badge: "NUEVO",
     image: "public/assets/dock.jpg",
     description: "Carga inalámbrica 15W MagSafe para Smartphone, Smartwatch y TWS.",
-    specs: ["15W MagSafe Compatible", "Luz ambiental 3 modos", "Control térmico", "Entrada USB-C PD 30W"]
+    variants: ["Edición Noche RGB", "Edición Minimalist White"],
+    specs: ["15W MagSafe Compatible", "Luz ambiental 3 modos"]
   }
 ];
 
@@ -273,16 +251,19 @@ function App() {
   const [products, setProducts] = useState(INITIAL_PRODUCTS);
   const [category, setCategory] = useState('Todos');
   const [search, setSearch] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
   const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState(() => JSON.parse(localStorage.getItem('tc_wishlist') || '[]'));
+  const [selectedVariants, setSelectedVariants] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [checkoutStep, setCheckStep] = useState('shipping');
   const [payMethod, setPayMethod] = useState('webpay');
   const [toast, setToast] = useState(null);
-  const [orders, setOrders] = useState([]);
   const [showLoginModal, setShowLogin] = useState(false);
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [createdOrder, setCreatedOrder] = useState(null);
+  const [selectedProdModal, setSelectedProdModal] = useState(null);
   const [shipping, setShipping] = useState({
     name: 'Carlos Mendoza', email: 'cliente@tecnocalidad.cl',
     phone: '+56 9 1234 5678', address: 'Av. Providencia 1234, Apt 502', city: 'Santiago'
@@ -293,35 +274,45 @@ function App() {
     localStorage.setItem('tc_theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    localStorage.setItem('tc_wishlist', JSON.stringify(wishlist));
+  }, [wishlist]);
+
   const showToast = (msg) => {
     setToast(msg);
     setTimeout(() => setToast(null), 3000);
   };
 
-  const loadProducts = useCallback(async () => {
-    try {
-      const res = await fetch('/api/products');
-      if (res.ok) {
-        const data = await res.json();
-        if (data.products && data.products.length > 0) setProducts(data.products);
-      }
-    } catch (e) {
-      // Modo demo
+  const toggleWishlist = (product, e) => {
+    e?.stopPropagation();
+    if (wishlist.includes(product.id)) {
+      setWishlist(prev => prev.filter(id => id !== product.id));
+      showToast(`Removido de favoritos ❤️`);
+    } else {
+      setWishlist(prev => [...prev, product.id]);
+      showToast(`¡Agregado a tus favoritos ❤️!`);
     }
-  }, []);
-
-  useEffect(() => { loadProducts(); }, [loadProducts]);
-
-  const addToCart = (p) => {
-    setCart(prev => {
-      const found = prev.find(i => i.id === p.id);
-      if (found) return prev.map(i => i.id === p.id ? { ...i, quantity: i.quantity + 1 } : i);
-      return [...prev, { ...p, quantity: 1 }];
-    });
-    showToast(`"${p.name.slice(0, 25)}…" agregado al carrito`);
   };
 
-  const handleLogin = async (e) => {
+  const handleVariantSelect = (productId, variantName) => {
+    setSelectedVariants(prev => ({ ...prev, [productId]: variantName }));
+  };
+
+  const addToCart = (p, e) => {
+    e?.stopPropagation();
+    const chosenVariant = selectedVariants[p.id] || (p.variants ? p.variants[0] : null);
+    const itemKey = chosenVariant ? `${p.id}-${chosenVariant}` : p.id;
+    const itemTitle = chosenVariant ? `${p.name} (${chosenVariant})` : p.name;
+
+    setCart(prev => {
+      const found = prev.find(i => i.itemKey === itemKey);
+      if (found) return prev.map(i => i.itemKey === itemKey ? { ...i, quantity: i.quantity + 1 } : i);
+      return [...prev, { ...p, itemKey, name: itemTitle, quantity: 1 }];
+    });
+    showToast(`"${itemTitle.slice(0, 30)}…" agregado al carrito`);
+  };
+
+  const handleLogin = (e) => {
     e.preventDefault();
     if (loginForm.username === 'admin' && loginForm.password === 'TecnoCalidad2026!') {
       sessionStorage.setItem('tc_token', 'demo_token');
@@ -334,7 +325,6 @@ function App() {
     showToast('Credenciales incorrectas');
   };
 
-  // Completar orden 100% visualmente (sin redirecciones externas)
   const handleCompleteOrder = (e) => {
     e.preventDefault();
     const rawSubtotal = cart.reduce((a, b) => a + b.price * b.quantity, 0);
@@ -351,10 +341,17 @@ function App() {
     setCreatedOrder(newOrd);
     setCart([]);
     setCheckStep('confirmation');
-    if (window.confetti) window.confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+    if (window.confetti) window.confetti({ particleCount: 130, spread: 85, origin: { y: 0.6 } });
   };
 
+  // Sugerencias de búsqueda predictiva en tiempo real
+  const searchSuggestions = search.trim() ? products.filter(p =>
+    p.name.toLowerCase().includes(search.toLowerCase()) ||
+    p.category.toLowerCase().includes(search.toLowerCase())
+  ).slice(0, 4) : [];
+
   const filtered = products.filter(p => {
+    if (category === '❤️ Favoritos') return wishlist.includes(p.id);
     const catOk = category === 'Todos' || p.category === category;
     const srchOk = !search || p.name.toLowerCase().includes(search.toLowerCase()) || (p.description || '').toLowerCase().includes(search.toLowerCase());
     return catOk && srchOk;
@@ -369,7 +366,7 @@ function App() {
     <div className="min-h-screen flex flex-col">
       {toast && <div className="toast">⚡ {toast}</div>}
 
-      {/* HEADER */}
+      {/* HEADER CON BUSCADOR PREDICTIVO */}
       <header className="glass-nav sticky top-0 z-40 px-5 py-4 flex items-center justify-between">
         <button onClick={() => setIsAdmin(false)} className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center text-black font-black text-lg">⚡</div>
@@ -380,14 +377,35 @@ function App() {
         </button>
 
         {!isAdmin && (
-          <div className="hidden md:block flex-1 max-w-md mx-6">
+          <div className="hidden md:block flex-1 max-w-md mx-6 relative">
             <input
               type="search"
               placeholder="Buscar cargadores GaN, repuestos, adaptadores, lámparas..."
               value={search}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
               onChange={e => setSearch(e.target.value)}
               className="field w-full"
             />
+            {/* Sugerencias de Autocompletado */}
+            {searchFocused && searchSuggestions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-slate-700 rounded-xl p-2 shadow-2xl z-50">
+                <div className="text-[10px] font-bold text-cyan-400 px-3 py-1 uppercase">Sugerencias Predictivas</div>
+                {searchSuggestions.map(s => (
+                  <div
+                    key={s.id}
+                    onClick={() => { setSelectedProdModal(s); setSearch(''); }}
+                    className="flex items-center gap-3 p-2 hover:bg-slate-800 rounded-lg cursor-pointer transition-all"
+                  >
+                    <img src={s.image} className="w-10 h-10 rounded-md object-cover" alt="" />
+                    <div className="flex-1 text-xs">
+                      <div className="font-bold text-white line-clamp-1">{s.name}</div>
+                      <div className="text-[11px] text-cyan-400 font-bold">{fmtCLP(s.price)}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -422,7 +440,7 @@ function App() {
             <div className="max-w-6xl mx-auto px-5">
               <div className="glass p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
                 <div className="max-w-xl">
-                  <span className="badge inline-block mb-3">⚡ AliExpress Suppliers Direct & Calidad Garantizada</span>
+                  <span className="badge inline-block mb-3">⚡ FASE 1: Variantes, Wishlist & Buscador Predictivo</span>
                   <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-3">
                     Cargadores, Adaptadores & <span className="grad-text">Repuestos Tech</span>
                   </h1>
@@ -432,7 +450,7 @@ function App() {
                 </div>
               </div>
 
-              {/* CATEGORIES SCROLL */}
+              {/* CATEGORIES SCROLL CON WISHLIST */}
               <div className="flex gap-2 overflow-x-auto py-5 no-scrollbar">
                 {CATEGORIES.map(cat => (
                   <button
@@ -444,53 +462,100 @@ function App() {
                         : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-600'
                     }`}
                   >
-                    {cat}
+                    {cat} {cat === '❤️ Favoritos' && wishlist.length > 0 ? `(${wishlist.length})` : ''}
                   </button>
                 ))}
               </div>
             </div>
           </section>
 
-          {/* PRODUCT GRID */}
+          {/* PRODUCT GRID CON VARIANTES & WISHLIST */}
           <section className="max-w-6xl mx-auto px-5 py-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {filtered.map(p => (
-                <div key={p.id} className="card glass p-4 rounded-2xl flex flex-col justify-between">
-                  <div>
-                    <div className="relative aspect-square rounded-xl overflow-hidden bg-slate-950 mb-3">
-                      <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
-                      {p.badge && <span className="absolute top-2 left-2 badge">{p.badge}</span>}
+            {filtered.length === 0 ? (
+              <div className="glass p-12 rounded-2xl text-center text-slate-400">
+                <div className="text-4xl mb-3">{category === '❤️ Favoritos' ? '❤️' : '🔍'}</div>
+                <p className="font-bold text-white text-base">
+                  {category === '❤️ Favoritos' ? 'No tienes productos en tus favoritos aún' : 'No se encontraron resultados'}
+                </p>
+                <button onClick={() => { setCategory('Todos'); setSearch(''); }} className="mt-3 text-xs text-cyan-400 underline">Ver todos los productos</button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {filtered.map(p => {
+                  const isFav = wishlist.includes(p.id);
+                  const selectedVariant = selectedVariants[p.id] || (p.variants ? p.variants[0] : null);
+
+                  return (
+                    <div
+                      key={p.id}
+                      onClick={() => setSelectedProdModal(p)}
+                      className="card glass p-4 rounded-2xl flex flex-col justify-between cursor-pointer relative"
+                    >
+                      {/* Botón Wishlist */}
+                      <button
+                        onClick={(e) => toggleWishlist(p, e)}
+                        className="absolute top-6 right-6 z-10 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-sm border border-slate-700 hover:scale-110 transition-transform"
+                      >
+                        {isFav ? '❤️' : '🤍'}
+                      </button>
+
+                      <div>
+                        <div className="relative aspect-square rounded-xl overflow-hidden bg-slate-950 mb-3">
+                          <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                          {p.badge && <span className="absolute top-2 left-2 badge">{p.badge}</span>}
+                        </div>
+                        <div className="text-[10px] font-bold text-cyan-400 uppercase mb-1">{p.category}</div>
+                        <h3 className="text-sm font-bold text-white line-clamp-2 mb-1">{p.name}</h3>
+                        
+                        {/* Puntuación ⭐ */}
+                        <div className="flex items-center gap-1.5 text-xs text-amber-400 font-bold mb-2">
+                          <span>⭐ {p.rating}</span>
+                          <span className="text-slate-400 text-[10px]">({p.reviewsCount} opiniones)</span>
+                        </div>
+
+                        {/* Selector de Variantes */}
+                        {p.variants && (
+                          <div className="mb-3" onClick={e => e.stopPropagation()}>
+                            <label className="text-[10px] font-bold text-slate-400 block mb-1">Opción / Variante:</label>
+                            <select
+                              value={selectedVariant}
+                              onChange={e => handleVariantSelect(p.id, e.target.value)}
+                              className="field py-1 text-[11px]"
+                            >
+                              {p.variants.map(v => <option key={v} value={v}>{v}</option>)}
+                            </select>
+                          </div>
+                        )}
+
+                        <div className="text-[11px] font-semibold text-emerald-400 mb-2">
+                          {p.stock < 35 ? `🔥 ¡Últimas ${p.stock} unidades!` : `✓ Stock disponible (${p.stock} u.)`}
+                        </div>
+                      </div>
+
+                      <div className="pt-3 mt-1 border-t border-slate-800 flex items-center justify-between">
+                        <div>
+                          <div className="font-black text-white">{fmtCLP(p.price)}</div>
+                          {p.oldPrice && <div className="text-[10px] text-slate-500 line-through">{fmtCLP(p.oldPrice)}</div>}
+                        </div>
+                        <button onClick={(e) => addToCart(p, e)} className="grad-btn px-3 py-1.5 text-xs rounded-xl">
+                          + Agregar
+                        </button>
+                      </div>
                     </div>
-                    <div className="text-[10px] font-bold text-cyan-400 uppercase mb-1">{p.category}</div>
-                    <h3 className="text-sm font-bold text-white line-clamp-2 mb-1">{p.name}</h3>
-                    <p className="text-xs text-slate-400 line-clamp-2 mb-2">{p.description}</p>
-                    
-                    <div className="text-[11px] font-semibold text-emerald-400 mb-2">
-                      {p.stock < 35 ? `🔥 ¡Últimas ${p.stock} unidades!` : `✓ Stock disponible (${p.stock} u.)`}
-                    </div>
-                  </div>
-                  <div className="pt-3 mt-1 border-t border-slate-800 flex items-center justify-between">
-                    <div>
-                      <div className="font-black text-white">{fmtCLP(p.price)}</div>
-                      {p.oldPrice && <div className="text-[10px] text-slate-500 line-through">{fmtCLP(p.oldPrice)}</div>}
-                    </div>
-                    <button onClick={() => addToCart(p)} className="grad-btn px-3 py-1.5 text-xs rounded-xl">
-                      + Agregar
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </section>
         </main>
       ) : (
         /* ADMIN DASHBOARD */
         <main className="flex-1 max-w-6xl w-full mx-auto p-6">
-          <h1 className="text-2xl font-black text-white mb-4">Panel TecnoCalidad</h1>
+          <h1 className="text-2xl font-black text-white mb-4">Panel TecnoCalidad (Shopify Style)</h1>
           <div className="glass p-6 rounded-2xl space-y-4">
             <div className="flex justify-between items-center border-b border-slate-800 pb-3">
               <h3 className="text-sm font-bold text-white">Productos en Catálogo ({products.length})</h3>
-              <span className="text-xs text-emerald-400 font-bold">Pasarelas Visuales: Webpay Plus · Mercado Pago · Stripe</span>
+              <span className="text-xs text-emerald-400 font-bold">Variantes & Wishlist Activos</span>
             </div>
             <div className="space-y-2 text-xs">
               {products.map(p => (
@@ -506,8 +571,47 @@ function App() {
 
       {/* FOOTER */}
       <footer className="mt-auto border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} TecnoCalidad · Opciones de Pago Visuales Webpay Plus / Mercado Pago / Stripe
+        © {new Date().getFullYear()} TecnoCalidad · FASE 1: Variantes de Producto, Wishlist & Buscador Predictivo
       </footer>
+
+      {/* MODAL DETALLE DE PRODUCTO */}
+      {selectedProdModal && (
+        <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
+          <div className="glass w-full max-w-lg bg-slate-900 p-6 rounded-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onClick={() => setSelectedProdModal(null)} className="absolute top-4 right-4 text-slate-400 text-lg">✕</button>
+            <div className="flex flex-col sm:flex-row gap-5">
+              <img src={selectedProdModal.image} className="w-full sm:w-48 aspect-square rounded-xl object-cover" alt="" />
+              <div className="space-y-2 text-xs flex-1">
+                <span className="badge">{selectedProdModal.category}</span>
+                <h3 className="text-base font-bold text-white">{selectedProdModal.name}</h3>
+                <div className="text-amber-400 font-bold">⭐ {selectedProdModal.rating} ({selectedProdModal.reviewsCount} evaluaciones)</div>
+                <p className="text-slate-300">{selectedProdModal.description}</p>
+                <div className="font-black text-cyan-400 text-lg">{fmtCLP(selectedProdModal.price)}</div>
+                
+                {selectedProdModal.variants && (
+                  <div>
+                    <label className="font-bold text-slate-300 block mb-1">Seleccionar Variante:</label>
+                    <select
+                      value={selectedVariants[selectedProdModal.id] || selectedProdModal.variants[0]}
+                      onChange={e => handleVariantSelect(selectedProdModal.id, e.target.value)}
+                      className="field"
+                    >
+                      {selectedProdModal.variants.map(v => <option key={v} value={v}>{v}</option>)}
+                    </select>
+                  </div>
+                )}
+
+                <button
+                  onClick={() => { addToCart(selectedProdModal); setSelectedProdModal(null); }}
+                  className="w-full grad-btn py-2.5 text-xs mt-3"
+                >
+                  + Agregar al Carrito
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* CART DRAWER */}
       {cartOpen && (
@@ -519,7 +623,7 @@ function App() {
             </div>
             <div className="flex-1 overflow-y-auto py-4 space-y-3">
               {cart.map(item => (
-                <div key={item.id} className="bg-slate-950 p-3 rounded-xl flex items-center justify-between text-xs">
+                <div key={item.itemKey || item.id} className="bg-slate-950 p-3 rounded-xl flex items-center justify-between text-xs">
                   <div>
                     <div className="font-bold text-white">{item.name}</div>
                     <div className="text-cyan-400 font-bold">{fmtCLP(item.price)} x {item.quantity}</div>
@@ -542,7 +646,7 @@ function App() {
         </div>
       )}
 
-      {/* CHECKOUT MODAL (VISUAL COMPOSITION - NO EXTERNAL REDIRECTS) */}
+      {/* CHECKOUT MODAL */}
       {checkoutOpen && (
         <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
           <div className="glass w-full max-w-md bg-slate-900 p-6 rounded-2xl relative">
@@ -561,7 +665,7 @@ function App() {
 
             {checkoutStep === 'payment' && (
               <form onSubmit={handleCompleteOrder} className="space-y-3 text-xs">
-                <h3 className="font-bold text-cyan-400 uppercase">2. Selección de Medio de Pago</h3>
+                <h3 className="font-bold text-cyan-400 uppercase">2. Medio de Pago Visual</h3>
                 <div className="space-y-2">
                   <label onClick={() => setPayMethod('webpay')} className={`block p-3 rounded-xl border cursor-pointer transition-all ${payMethod === 'webpay' ? 'border-cyan-400 bg-cyan-500/10 font-bold text-white' : 'border-slate-800 bg-slate-950 text-slate-300'}`}>
                     💳 Transbank Webpay Plus (Débito/Crédito Chile)
@@ -580,7 +684,7 @@ function App() {
             {checkoutStep === 'confirmation' && createdOrder && (
               <div className="text-center py-6 space-y-3 text-xs">
                 <div className="text-3xl text-emerald-400">✓</div>
-                <h3 className="text-lg font-black text-white">¡Orden Demo Confirmada!</h3>
+                <h3 className="text-lg font-black text-white">¡Orden Confirmada!</h3>
                 <p className="text-slate-400">Orden {createdOrder.id} procesada con {createdOrder.method}.</p>
                 <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-left font-semibold">
                   <div>Cliente: {createdOrder.customer}</div>
