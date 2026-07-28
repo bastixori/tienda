@@ -268,7 +268,6 @@ const INITIAL_PRODUCTS = [
 ];
 
 function App() {
-  const [theme, setTheme] = useState(() => localStorage.getItem('tc_theme') || 'dark');
   const [isAdmin, setIsAdmin] = useState(false);
   const [products, setProducts] = useState(INITIAL_PRODUCTS);
   const [category, setCategory] = useState('Todos');
@@ -289,10 +288,7 @@ function App() {
     name: '', email: '', phone: '', address: '', city: 'Santiago'
   });
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('tc_theme', theme);
-  }, [theme]);
+
 
   useEffect(() => {
     fetch('/api/products')
@@ -455,9 +451,6 @@ function App() {
           {isAdmin && (
             <button onClick={() => setIsAdmin(false)} className="px-3 py-1.5 rounded-xl text-xs font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-400">🛍️ Tienda</button>
           )}
-          <button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} className="w-8 h-8 rounded-full bg-slate-800 text-sm flex items-center justify-center">
-            {theme === 'dark' ? '☀️' : '🌙'}
-          </button>
           {!isAdmin && (
             <button onClick={() => setCartOpen(true)} className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cyan-500/15 border border-cyan-500/35 text-white font-bold text-xs">
               🛒 ({cartCount})
