@@ -68,25 +68,7 @@
     ::-webkit-scrollbar { height: 6px; width:6px; }
     ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.15); border-radius:3px; }
 
-    /* Social Proof Notification */
-    .social-proof {
-      position: fixed; bottom: 22px; left: 22px; z-index: 180;
-      background: rgba(15,23,42,.95); border: 1px solid rgba(0,240,255,.25);
-      padding: 12px 16px; border-radius: 14px; max-width: 320px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 15px rgba(0,240,255,.15);
-      animation: slideInLeft .5s ease-out;
-    }
-    @keyframes slideInLeft {
-      from { transform: translateX(-120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    @keyframes slideOutLeft {
-      from { transform: translateX(0); opacity: 1; }
-      to { transform: translateX(-120%); opacity: 0; }
-    }
-    .social-proof.hiding { animation: slideOutLeft .4s ease-in forwards; }
-
-    /* Floating Social Bar (HD Vector Logos) */
+    /* Premium Floating Social Bar (HD Vector Logos) */
     .floating-social-bar {
       position: fixed; bottom: 22px; right: 22px; z-index: 170;
       display: flex; flex-direction: column; gap: 12px; align-items: center;
@@ -285,19 +267,6 @@ const INITIAL_PRODUCTS = [
   }
 ];
 
-const SOCIAL_PROOF_DATA = [
-  { name: "Camila", city: "Las Condes", product: "Power Bank 20.000mAh Ultra Rápida", qty: 1, mins: 3 },
-  { name: "Diego", city: "Viña del Mar", product: "Mini Impresora Térmica", qty: 1, mins: 7 },
-  { name: "Valentina", city: "Providencia", product: "Mini Lámpara USB Redonda", qty: 4, mins: 2 },
-  { name: "Matías", city: "Concepción", product: "Cable USB-C 100W Pantalla LED", qty: 1, mins: 11 },
-  { name: "Sofía", city: "Ñuñoa", product: "Audífonos LivePods HD", qty: 1, mins: 5 },
-  { name: "Tomás", city: "Temuco", product: "Hub USB-C 8 en 1", qty: 1, mins: 8 },
-  { name: "Fernanda", city: "La Serena", product: "Luz LED Tira RGB", qty: 2, mins: 4 },
-  { name: "Benjamín", city: "Antofagasta", product: "Soporte Plegable de Aluminio", qty: 1, mins: 6 },
-  { name: "Isidora", city: "Rancagua", product: "Cargador GaN 65W", qty: 1, mins: 1 },
-  { name: "Joaquín", city: "Valparaíso", product: "Mini Lámpara USB Redonda", qty: 2, mins: 9 },
-];
-
 function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('tc_theme') || 'dark');
   const [isAdmin, setIsAdmin] = useState(false);
@@ -315,10 +284,6 @@ function App() {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [createdOrder, setCreatedOrder] = useState(null);
   const [selectedProdModal, setSelectedProdModal] = useState(null);
-
-  const [socialProof, setSocialProof] = useState(null);
-  const [socialHiding, setSocialHiding] = useState(false);
-  const socialIdx = useRef(0);
 
   const [shipping, setShipping] = useState({
     name: '', email: '', phone: '', address: '', city: 'Santiago'
@@ -348,26 +313,6 @@ function App() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  useEffect(() => {
-    const showNext = () => {
-      const data = SOCIAL_PROOF_DATA[socialIdx.current % SOCIAL_PROOF_DATA.length];
-      const mins = Math.floor(Math.random() * 12) + 1;
-      setSocialHiding(false);
-      setSocialProof({ ...data, mins });
-      socialIdx.current++;
-
-      setTimeout(() => {
-        setSocialHiding(true);
-        setTimeout(() => setSocialProof(null), 400);
-      }, 4500);
-    };
-
-    const first = setTimeout(showNext, 8000);
-    const interval = setInterval(showNext, 18000 + Math.random() * 7000);
-
-    return () => { clearTimeout(first); clearInterval(interval); };
   }, []);
 
   const showToast = (msg) => {
@@ -434,26 +379,6 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       {toast && <div className="toast">⚡ {toast}</div>}
-
-      {/* SOCIAL PROOF NOTIFICATION */}
-      {socialProof && (
-        <div className={`social-proof ${socialHiding ? 'hiding' : ''}`}>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-white font-black text-sm">
-              {socialProof.name[0]}
-            </div>
-            <div className="text-xs">
-              <div className="font-bold text-white">
-                🛒 {socialProof.name} de {socialProof.city}
-              </div>
-              <div className="text-slate-300">
-                compró {socialProof.qty}x {socialProof.product}
-              </div>
-              <div className="text-[10px] text-slate-500">hace {socialProof.mins} min</div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ULTRA HD FLOATING VECTOR SOCIAL BAR */}
       {!isAdmin && (
