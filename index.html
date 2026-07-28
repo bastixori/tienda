@@ -57,7 +57,6 @@
     .grad-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,240,255,.38); }
     .card { transition: transform .3s, border-color .3s, box-shadow .3s; }
     .card:hover { transform: translateY(-5px); border-color: var(--border-glow); box-shadow: 0 12px 30px rgba(0,240,255,.18); }
-    .badge { background:rgba(0,240,255,.12); color:#00f0ff; border:1px solid rgba(0,240,255,.3); padding:2px 9px; border-radius:999px; font-size:.7rem; font-weight:800; }
     .toast {
       position:fixed; bottom:22px; right:22px; z-index:200;
       background:#0f172a; border:1px solid var(--cyan); color:#fff;
@@ -69,7 +68,6 @@
     ::-webkit-scrollbar { height: 6px; width:6px; }
     ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.15); border-radius:3px; }
 
-    /* Social Proof Notification */
     .social-proof {
       position: fixed; bottom: 22px; left: 22px; z-index: 180;
       background: rgba(15,23,42,.95); border: 1px solid rgba(0,240,255,.25);
@@ -87,7 +85,6 @@
     }
     .social-proof.hiding { animation: slideOutLeft .4s ease-in forwards; }
 
-    /* Floating Social Bar (WhatsApp + Instagram) */
     .floating-social-bar {
       position: fixed; bottom: 22px; right: 22px; z-index: 170;
       display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
@@ -104,14 +101,11 @@
       background: linear-gradient(135deg, #25D366, #128C7E);
       box-shadow: 0 6px 20px rgba(37,211,102,.35);
     }
-    .social-fab-wa:hover { box-shadow: 0 8px 25px rgba(37,211,102,.55); }
     .social-fab-ig {
       background: linear-gradient(135deg, #833AB4, #FD1D1D, #F56040);
       box-shadow: 0 6px 20px rgba(253,29,29,.35);
     }
-    .social-fab-ig:hover { box-shadow: 0 8px 25px rgba(253,29,29,.55); }
 
-    /* Trust badges */
     .trust-bar { display: flex; gap: 12px; flex-wrap: wrap; }
     .trust-badge {
       display: flex; align-items: center; gap: 5px;
@@ -135,16 +129,19 @@ const CATEGORIES = [
   'Lámparas Recargables',
   'Cargadores & Baterías',
   'Adaptadores & Hubs',
-  'Repuestos & Accesorios',
   'Cables & Carga Rápida',
   'Audio & Audífonos',
-  'Gadgets Tech'
+  'Gadgets Tech',
+  'Accesorios Tech'
 ];
 
+/* ═══════════════════════════════════════════════════════
+   LOS 10 PRODUCTOS MÁS VENDIDOS DE ALIEXPRESS
+   ═══════════════════════════════════════════════════════ */
 const INITIAL_PRODUCTS = [
   {
     id: "prod-1",
-    name: "Mini Lámpara USB Redonda — Luz de Noche Instantánea",
+    name: "Mini Lámpara USB Redonda Noche",
     category: "Lámparas Recargables",
     price: 4.990,
     oldPrice: 7.990,
@@ -153,164 +150,164 @@ const INITIAL_PRODUCTS = [
     stock: 150,
     image: "public/assets/mini_usb_lamp.png",
     headline: "Ilumina tu velador toda la noche por menos de $1 al mes de electricidad.",
-    description: "Conéctala a cualquier cargador, power bank o notebook y listo. Sin cables, sin complicaciones. Elige entre luz cálida para dormir o blanca para leer.",
+    description: "Conéctala a cualquier cargador, power bank o notebook y listo. Sin cables, sin complicaciones. Disponible en Luz Cálida y Blanca.",
     variants: ["Luz Cálida (relax)", "Luz Blanca (lectura)"],
-    specs: ["Plug & Play USB directo", "Solo 1W de consumo", "Compatible con todo"]
+    specs: ["Plug & Play USB directo", "Solo 1W de consumo", "Luz antideslumbrante"]
   },
   {
-    id: "prod-7",
-    name: "Cargador GaN 65W — Carga Tu Notebook y Celular al Mismo Tiempo",
+    id: "prod-2",
+    name: "Power Bank MagSafe 10.000mAh Cyberpunk Transparente",
     category: "Cargadores & Baterías",
-    price: 27.990,
+    price: 24.990,
     oldPrice: 34.990,
-    rating: 4.92,
-    reviewsCount: 145,
-    stock: 50,
+    rating: 4.91,
+    reviewsCount: 280,
+    stock: 45,
+    image: "public/assets/powerbank.jpg",
+    headline: "5 cargas completas sin buscar enchufe. Pégala magnéticamente a tu celular.",
+    description: "Diseño cyberpunk transparente futurista con imán MagSafe ultra fuerte y pantalla LED digital de porcentaje de batería.",
+    variants: ["Negro Cyber", "Plata Titanio"],
+    specs: ["Imán MagSafe ultra fuerte", "Pantalla LED de % real", "Carga inalámbrica 15W + PD 22.5W"]
+  },
+  {
+    id: "prod-3",
+    name: "Cargador GaN 65W Fast Charger Dual USB-C + USB-A",
+    category: "Cargadores & Baterías",
+    price: 22.990,
+    oldPrice: 29.990,
+    rating: 4.93,
+    reviewsCount: 195,
+    stock: 60,
     image: "public/assets/charger.jpg",
     headline: "Del 0% al 50% en solo 20 minutos. Y cabe en tu bolsillo.",
-    description: "Olvídate de cargar los cargadores enormes. Este es más chico que un naipe y carga tu notebook, tablet y celular a la vez. No se calienta gracias a la tecnología GaN.",
-    variants: ["Negro Matte Cyber", "Blanco Titanio Pro"],
-    specs: ["3 dispositivos a la vez", "Más chico que un naipe", "No se calienta"]
+    description: "Carga tu notebook, tablet y smartphone al mismo tiempo. Tecnología GaN III que no genera calor.",
+    variants: ["Negro Matte", "Blanco Pro"],
+    specs: ["Tecnología GaN III", "Carga 3 dispositivos simultáneos", "Salida 65W Turbo"]
   },
   {
-    id: "prod-8",
-    name: "Power Bank MagSafe 20.000mAh — 5 Cargas Sin Buscar Enchufe",
-    category: "Cargadores & Baterías",
-    price: 38.990,
-    oldPrice: 49.990,
-    rating: 4.89,
-    reviewsCount: 98,
-    stock: 40,
-    image: "public/assets/powerbank.jpg",
-    headline: "5 cargas completas de tu iPhone sin buscar un enchufe. Pégala magnéticamente y listo.",
-    description: "Se pega magnéticamente a tu celular. La pantalla te muestra el porcentaje exacto. Nunca más te quedas sin batería en la calle, en un viaje o en la pega.",
-    variants: ["20.000 mAh (5 cargas)", "10.000 mAh (Ultra Slim)"],
-    specs: ["Se pega magnéticamente", "Pantalla de % en tiempo real", "Carga inalámbrica + cable"]
+    id: "prod-4",
+    name: "Mini Impresora Térmica Portátil Bluetooth Pocket",
+    category: "Gadgets Tech",
+    price: 21.990,
+    oldPrice: 29.990,
+    rating: 4.88,
+    reviewsCount: 510,
+    stock: 30,
+    image: "public/assets/dock.jpg",
+    headline: "Imprime fotos, etiquetas y notas de estudio al instante desde tu celular. ¡Sin usar tinta!",
+    description: "Impresora térmica de bolsillo ultra compacta que se conecta por Bluetooth. Ideal para estudiantes y organizadores.",
+    variants: ["Rosa Pastel", "Azul Sky", "Blanco Nieve"],
+    specs: ["Sin tinta (tecnología térmica)", "Conexión Bluetooth iOS/Android", "Incluye 1 rollo adhesivo"]
   },
   {
-    id: "prod-9",
-    name: "Hub USB-C 8 en 1 — Tu Oficina Completa en Un Solo Puerto",
+    id: "prod-5",
+    name: "Audífonos Inalámbricos TWS Lenovo Thinkplus LivePods",
+    category: "Audio & Audífonos",
+    price: 14.990,
+    oldPrice: 21.990,
+    rating: 4.94,
+    reviewsCount: 620,
+    stock: 80,
+    image: "public/assets/headphones.jpg",
+    headline: "Sonido HD de alta definición y batería para toda la semana.",
+    description: "Bluetooth 5.3 de baja latencia, estuche de carga USB-C ultraliviano y micrófonos con cancelación de ruido de llamadas.",
+    variants: ["Negro Sigilo", "Blanco Puro"],
+    specs: ["Bluetooth 5.3 HD", "Autonomía 28 horas", "Resistencia al agua IPX4"]
+  },
+  {
+    id: "prod-6",
+    name: "Adaptador Hub USB-C 8 en 1 HDMI 4K + Ethernet",
     category: "Adaptadores & Hubs",
-    price: 32.990,
-    oldPrice: 42.990,
+    price: 21.990,
+    oldPrice: 29.990,
     rating: 4.95,
     reviewsCount: 180,
     stock: 35,
     image: "public/assets/hub.jpg",
-    headline: "Conecta monitor, internet, pendrive y carga tu notebook con UN solo cable.",
-    description: "Transforma el único USB-C de tu notebook en 8 puertos. Pantalla 4K, internet por cable, lector de tarjetas SD y carga de 100W sin desconectar nada.",
+    headline: "Conecta monitor 4K, internet, pendrive y carga tu notebook con 1 solo puerto.",
+    description: "Transforma el puerto USB-C de tu equipo en 8 salidas: HDMI 4K, Ethernet RJ45 Gigabit, 3x USB 3.0, Lector SD/TF y PD 100W.",
     variants: ["Gris Espacial", "Plata Anodizada"],
-    specs: ["8 puertos en 1 cable", "Pantalla 4K al monitor", "Internet por cable incluido"]
+    specs: ["Salida HDMI 4K UHD", "Puerto Ethernet Gigabit 1000Mbps", "Chasis de aluminio aeroespacial"]
+  },
+  {
+    id: "prod-7",
+    name: "Cable USB-C PD 100W con Pantalla LED de Vatios",
+    category: "Cables & Carga Rápida",
+    price: 11.990,
+    oldPrice: 16.990,
+    rating: 4.89,
+    reviewsCount: 410,
+    stock: 90,
+    image: "public/assets/cable.jpg",
+    headline: "Te MUESTRA en pantalla cuántos watts está recibiendo tu dispositivo en tiempo real.",
+    description: "Construcción en nylon trenzado militar ultra resistente. Pantalla digital que verifica la velocidad real de carga.",
+    variants: ["Largo 1.2 Metros", "Largo 2.0 Metros"],
+    specs: ["Potencia 100W Power Delivery", "Pantalla LED en tiempo real", "Nylon trenzado indestructible"]
+  },
+  {
+    id: "prod-8",
+    name: "Smartband Pulsera Inteligente HD Monitoreo Cardíaco",
+    category: "Gadgets Tech",
+    price: 13.990,
+    oldPrice: 19.990,
+    rating: 4.85,
+    reviewsCount: 310,
+    stock: 55,
+    image: "public/assets/lamp.jpg",
+    headline: "Monitorea tus pasos, sueño y pulso cardíaco durante todo el día.",
+    description: "Pantalla color HD táctil, certificación contra agua y sensores de ritmo cardíaco y oxígeno en sangre.",
+    variants: ["Negro Sport", "Azul Marino"],
+    specs: ["Pantalla HD Color", "Medidor de pulso & SpO2", "Notificaciones de llamadas/WhatsApp"]
+  },
+  {
+    id: "prod-9",
+    name: "Luz LED Tira RGB USB Inteligente con App & Bluetooth",
+    category: "Gadgets Tech",
+    price: 7.990,
+    oldPrice: 12.990,
+    rating: 4.87,
+    reviewsCount: 450,
+    stock: 70,
+    image: "public/assets/lamp.jpg",
+    headline: "Ambienta tu escritorio o TV con millones de colores controlados desde tu celular.",
+    description: "Tira LED RGB autoadhesiva con conexión USB directa y control por aplicación móvil o control remoto.",
+    variants: ["Largo 2 Metros", "Largo 5 Metros"],
+    specs: ["Control por App & Bluetooth", "16 millones de colores RGB", "Sincronización con música"]
   },
   {
     id: "prod-10",
-    name: "Adaptador OTG USB-C — Conecta Tu Pendrive al Celular",
-    category: "Adaptadores & Hubs",
-    price: 5.990,
-    oldPrice: 8.990,
-    rating: 4.8,
-    reviewsCount: 310,
-    stock: 100,
+    name: "Soporte Plegable de Aluminio Ergonómico para Laptop",
+    category: "Accesorios Tech",
+    price: 9.990,
+    oldPrice: 15.990,
+    rating: 4.90,
+    reviewsCount: 290,
+    stock: 65,
     image: "public/assets/hub.jpg",
-    headline: "Pasa archivos del pendrive a tu celular en segundos. Sin internet, sin apps.",
-    description: "¿Necesitas pasar fotos, documentos o música del pendrive al celular? Conéctalo directamente. También sirve para mouse, teclado o control de juegos.",
-    variants: ["Pack x2 Unidades", "Pack x4 Unidades"],
-    specs: ["Plug & Play sin apps", "Transferencia ultra rápida", "Cuerpo metálico premium"]
-  },
-  {
-    id: "prod-11",
-    name: "Base Magnética de Repuesto — Pega Tu Lámpara Donde Quieras",
-    category: "Repuestos & Accesorios",
-    price: 7.990,
-    oldPrice: 11.990,
-    rating: 4.85,
-    reviewsCount: 42,
-    stock: 60,
-    image: "public/assets/lamp.jpg",
-    headline: "Mueve tu lámpara del velador a la cocina, al baño o al closet. Sin tornillos.",
-    description: "Adhesivo 3M industrial que pega en cualquier superficie lisa. Imán N52 ultra fuerte que sostiene tu lámpara sin que se caiga. Instálalo en 10 segundos.",
-    variants: ["Negro Mate", "Blanco Puro"],
-    specs: ["Adhesivo 3M industrial", "Imán ultra fuerte N52", "Instalación 10 segundos"]
-  },
-  {
-    id: "prod-12",
-    name: "Batería Li-ion 5000mAh — Dale Vida Extra a Tus Gadgets",
-    category: "Repuestos & Accesorios",
-    price: 12.990,
-    oldPrice: 16.990,
-    rating: 4.9,
-    reviewsCount: 29,
-    stock: 20,
-    image: "public/assets/charger.jpg",
-    headline: "No tires tu gadget. Cámbiale la batería y queda como nuevo.",
-    description: "Celda original de litio con protección contra sobrecarga incluida. Compatible con lámparas recargables, parlantes portátiles y dispositivos con conector JST.",
-    variants: ["5000 mAh Standard", "6500 mAh Long Life"],
-    specs: ["Protección contra sobrecarga", "Conector universal JST", "Duplica la vida útil"]
-  },
-  {
-    id: "prod-2",
-    name: "Cable USB-C 100W — El Único Cable Con Pantalla de Watts",
-    category: "Cables & Carga Rápida",
-    price: 18.990,
-    oldPrice: 24.990,
-    rating: 4.8,
-    reviewsCount: 94,
-    stock: 40,
-    image: "public/assets/cable.jpg",
-    headline: "Te MUESTRA en pantalla cuántos watts está recibiendo tu dispositivo. En tiempo real.",
-    description: "¿Tu celular carga lento y no sabes por qué? Este cable tiene una pantalla LED que te muestra si estás cargando a 5W, 20W o 100W. Trenzado de nylon indestructible.",
-    variants: ["Largo 1.2 Metros", "Largo 2.0 Metros"],
-    specs: ["Pantalla LED de watts", "Nylon indestructible", "Carga notebooks + celulares"]
-  },
-  {
-    id: "prod-3",
-    name: "Audífonos ANC Pro — Silencio Total Para Concentrarte",
-    category: "Audio & Audífonos",
-    price: 89.990,
-    oldPrice: 119.990,
-    rating: 4.95,
-    reviewsCount: 210,
-    stock: 12,
-    image: "public/assets/headphones.jpg",
-    headline: "Cancela el ruido del metro, la oficina y los vecinos. 60 horas sin cargar.",
-    description: "Ponte estos audífonos y el mundo desaparece. Cancelación de ruido de -45dB, sonido Hi-Res certificado y una batería que dura toda la semana laboral sin cargar.",
-    variants: ["Negro Grafito", "Plata Estelar"],
-    specs: ["El ruido desaparece (-45dB)", "60h sin cargar (toda la semana)", "10 min de carga = 5h de música"]
-  },
-  {
-    id: "prod-4",
-    name: "Estación MagTech 3 en 1 — Carga Todo Mientras Duermes",
-    category: "Gadgets Tech",
-    price: 49.990,
-    oldPrice: 69.990,
-    rating: 4.88,
-    reviewsCount: 76,
-    stock: 18,
-    image: "public/assets/dock.jpg",
-    headline: "Celular, reloj y audífonos. Todo cargado cuando suena la alarma.",
-    description: "Deja tu iPhone, Apple Watch y AirPods en la estación antes de dormir. Cuando despiertes, todo está al 100%. Luz ambiental suave que no molesta de noche.",
-    variants: ["Edición Noche RGB", "Edición Minimalist White"],
-    specs: ["3 dispositivos a la vez", "Luz ambiental suave", "Compatible MagSafe"]
+    headline: "Evita dolores de cuello y mantiene tu computador frío mientras trabajas.",
+    description: "Estructura de aluminio anodizado con 6 niveles de inclinación ajustable y almohadillas de silicona antideslizantes.",
+    variants: ["Plata Anodizada", "Gris Espacial"],
+    specs: ["Aluminio ultraliviano plegable", "6 niveles de altura ajustable", "Mejora la ventilación del equipo"]
   }
 ];
 
 const SOCIAL_PROOF_DATA = [
-  { name: "Camila", city: "Las Condes", product: "Cargador GaN 65W", qty: 2, mins: 3 },
-  { name: "Diego", city: "Viña del Mar", product: "Power Bank MagSafe", qty: 1, mins: 7 },
+  { name: "Camila", city: "Las Condes", product: "Power Bank MagSafe Cyberpunk", qty: 1, mins: 3 },
+  { name: "Diego", city: "Viña del Mar", product: "Mini Impresora Térmica", qty: 1, mins: 7 },
   { name: "Valentina", city: "Providencia", product: "Mini Lámpara USB Redonda", qty: 4, mins: 2 },
-  { name: "Matías", city: "Concepción", product: "Cable USB-C 100W", qty: 1, mins: 11 },
-  { name: "Sofía", city: "Ñuñoa", product: "Audífonos ANC Pro", qty: 1, mins: 5 },
+  { name: "Matías", city: "Concepción", product: "Cable USB-C 100W Pantalla LED", qty: 1, mins: 11 },
+  { name: "Sofía", city: "Ñuñoa", product: "Audífonos Lenovo Thinkplus", qty: 1, mins: 5 },
   { name: "Tomás", city: "Temuco", product: "Hub USB-C 8 en 1", qty: 1, mins: 8 },
-  { name: "Fernanda", city: "La Serena", product: "Estación MagTech 3 en 1", qty: 1, mins: 4 },
-  { name: "Benjamín", city: "Antofagasta", product: "Pack Adaptador OTG x2", qty: 2, mins: 6 },
-  { name: "Isidora", city: "Rancagua", product: "Mini Lámpara USB Redonda", qty: 3, mins: 1 },
-  { name: "Joaquín", city: "Valparaíso", product: "Cargador GaN 65W", qty: 1, mins: 9 },
+  { name: "Fernanda", city: "La Serena", product: "Luz LED Tira RGB", qty: 2, mins: 4 },
+  { name: "Benjamín", city: "Antofagasta", product: "Soporte Plegable de Aluminio", qty: 1, mins: 6 },
+  { name: "Isidora", city: "Rancagua", product: "Cargador GaN 65W", qty: 1, mins: 1 },
+  { name: "Joaquín", city: "Valparaíso", product: "Smartband Pulsera Inteligente", qty: 1, mins: 9 },
 ];
 
 function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('tc_theme') || 'dark');
   const [isAdmin, setIsAdmin] = useState(false);
-  const [products] = useState(INITIAL_PRODUCTS);
+  const [products, setProducts] = useState(INITIAL_PRODUCTS);
   const [category, setCategory] = useState('Todos');
   const [search, setSearch] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
@@ -325,7 +322,6 @@ function App() {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [createdOrder, setCreatedOrder] = useState(null);
   const [selectedProdModal, setSelectedProdModal] = useState(null);
-  const [logoClicks, setLogoClicks] = useState(0);
 
   const [socialProof, setSocialProof] = useState(null);
   const [socialHiding, setSocialHiding] = useState(false);
@@ -339,6 +335,18 @@ function App() {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('tc_theme', theme);
   }, [theme]);
+
+  // Carga productos desde el backend si está activo
+  useEffect(() => {
+    fetch('/api/products')
+      .then(res => res.json())
+      .then(data => {
+        if (data.products && data.products.length > 0) {
+          setProducts(data.products);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -369,14 +377,6 @@ function App() {
 
     return () => { clearTimeout(first); clearInterval(interval); };
   }, []);
-
-  const handleLogoClick = () => {
-    setLogoClicks(prev => {
-      const next = prev + 1;
-      if (next >= 4) { setShowLogin(true); return 0; }
-      return next;
-    });
-  };
 
   const showToast = (msg) => {
     setToast(msg);
@@ -497,11 +497,11 @@ function App() {
 
       {/* HEADER */}
       <header className="glass-nav sticky top-0 z-40 px-5 py-4 flex items-center justify-between">
-        <button onClick={handleLogoClick} className="flex items-center gap-2.5 text-left">
+        <button onClick={() => setIsAdmin(false)} className="flex items-center gap-2.5 text-left">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center text-black font-black text-lg">⚡</div>
           <div>
             <div className="text-lg font-extrabold text-white leading-none">TECNO <span className="grad-text">CALIDAD</span></div>
-            <div className="text-[9px] font-bold text-cyan-400 tracking-widest uppercase">Tecnología directa de fábrica</div>
+            <div className="text-[9px] font-bold text-cyan-400 tracking-widest uppercase">Los 10 más vendidos de AliExpress</div>
           </div>
         </button>
 
@@ -547,17 +547,17 @@ function App() {
 
       {!isAdmin ? (
         <main className="flex-1">
-          {/* HERO BANNER LIMPIO */}
+          {/* HERO BANNER */}
           <section className="border-b border-slate-800/60 pt-6 pb-8">
             <div className="max-w-6xl mx-auto px-5">
               <div className="glass p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
                 <div className="max-w-xl">
-                  <span className="badge inline-block mb-3">⚡ Calidad Garantizada & Despacho a todo Chile</span>
+                  <span className="badge inline-block mb-3">🔥 Los 10 Más Vendidos de AliExpress Direct</span>
                   <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-3">
                     Tecnología que <span className="grad-text">resuelve tu día</span>
                   </h1>
                   <p className="text-slate-300 text-xs sm:text-sm mb-4">
-                    Carga más rápido. Conecta todo. Ilumina sin cables. Directo de fábrica a tu puerta.
+                    Impresoras térmicas sin tinta, cargadores GaN 65W, Power Banks MagSafe Cyberpunk, audífonos Lenovo y adaptadores.
                   </p>
 
                   {/* TRUST BADGES */}
@@ -626,7 +626,7 @@ function App() {
                         )}
 
                         <div className="text-[11px] font-semibold text-emerald-400 mb-2">
-                          {p.stock < 35 ? `🔥 ¡Últimas ${p.stock} unidades!` : `✓ Stock disponible`}
+                          {p.stock < 40 ? `🔥 ¡Últimas ${p.stock} unidades!` : `✓ Stock disponible`}
                         </div>
                       </div>
 
@@ -675,7 +675,7 @@ function App() {
 
       <footer className="mt-auto border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
         <span onClick={() => setShowLogin(true)} className="cursor-pointer hover:text-slate-400">
-          © {new Date().getFullYear()} TecnoCalidad · Tecnología directa de fábrica
+          © {new Date().getFullYear()} TecnoCalidad · Los 10 más vendidos de AliExpress
         </span>
       </footer>
 
