@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 TecnoCalidad E-Commerce - Backend Server
-Actualizado con imagenes estilo proveedores AliExpress en HD para todos los productos.
+Imagenes locales en public/assets/ 100% garantizadas y compatibles con GitHub Pages.
 """
 
 import sys
@@ -109,62 +109,55 @@ CREATE TABLE IF NOT EXISTS audit_log (
 """
 
 EXPANDED_PRODUCTS = [
-  # LÁMPARA REDONDA USB (EXACTAMENTE LA FOTO DEL USUARIO)
   ("prod-1", "Mini Lámpara USB Portátil Redonda Noche (Cálida / Blanca)", "Lámparas Recargables",
    4.990, 7.990, 4.98, 340, 150, "MÁS VENDIDO ALIEXPRESS", "public/assets/mini_usb_lamp.png",
-   "Mini bombilla LED cilíndrica/redonda ultra compacta con conector USB directo. Disponible en Luz Cálida (Soft Warm) y Luz Blanca (Cool White). Ideal para Power Banks, cargadores, laptops o veladores.",
-   json.dumps(["Conector: USB Plug Directo", "Luz Cálida (3000K) / Luz Blanca (6500K)", "Consumo 1W de alta eficiencia", "Compatibilidad universal USB"])),
+   "Mini bombilla LED cilíndrica/redonda ultra compacta con conector USB directo. Disponible en Luz Cálida y Luz Blanca. Ideal para Power Banks, cargadores o laptops.",
+   json.dumps(["Conector: USB Plug Directo", "Luz Cálida (3000K) / Luz Blanca (6500K)", "Consumo 1W de alta eficiencia"])),
   
-  # CARGADORES & BATERÍAS (IMÁGENES DE PROVEEDOR REAL)
   ("prod-7", "Cargador GaN 65W Dual USB-C Ultra Compacto", "Cargadores & Baterías",
-   27.990, 34.990, 4.92, 145, 50, "CERO CALOR", "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=800&q=80",
+   27.990, 34.990, 4.92, 145, 50, "CERO CALOR", "public/assets/charger.jpg",
    "Cargador de pared tecnología GaN Fast Charger 65W. Carga laptops, tablets y smartphones simultáneamente.",
-   json.dumps(["Tecnología GaN III", "Salida 65W Max", "2x USB-C + 1x USB-A", "Protección contra sobretemperatura"])),
+   json.dumps(["Tecnología GaN III", "Salida 65W Max", "2x USB-C + 1x USB-A"])),
   
   ("prod-8", "Batería Externa Power Bank 20.000mAh MagSafe 22.5W", "Cargadores & Baterías",
-   38.990, 49.990, 4.89, 98, 40, "MAGSAFE FAST", "https://images.unsplash.com/photo-1609592424109-dd9892f1b177?auto=format&fit=crop&w=800&q=80",
+   38.990, 49.990, 4.89, 98, 40, "MAGSAFE FAST", "public/assets/powerbank.jpg",
    "Power bank de alta densidad con carga rápida inalámbrica magnética y pantalla digital LED.",
-   json.dumps(["Capacidad 20,000mAh", "Carga Inalámbrica 15W", "Carga por Cable PD 22.5W", "Pantalla de batería %"])),
+   json.dumps(["Capacidad 20,000mAh", "Carga Inalámbrica 15W", "Carga por Cable PD 22.5W"])),
 
-  # ADAPTADORES & HUBS
   ("prod-9", "Adaptador Hub USB-C 8 en 1 HDMI 4K & Ethernet", "Adaptadores & Hubs",
-   32.990, 42.990, 4.95, 180, 35, "OFICINA TOP", "https://images.unsplash.com/photo-1616440342230-01a2f6443c5b?auto=format&fit=crop&w=800&q=80",
+   32.990, 42.990, 4.95, 180, 35, "OFICINA TOP", "public/assets/hub.jpg",
    "Estación Hub multipuerto de aluminio con HDMI 4K, 3x USB 3.0, Lector SD/TF, Ethernet RJ45 y PD 100W.",
-   json.dumps(["Salida HDMI 4K@30Hz", "Ethernet 1000Mbps", "Pass-Through 100W PD", "Chasis de aluminio aeroespacial"])),
+   json.dumps(["Salida HDMI 4K@30Hz", "Ethernet 1000Mbps", "Pass-Through 100W PD"])),
 
   ("prod-10", "Mini Adaptador OTG USB-C a USB-A 3.0 Metal", "Adaptadores & Hubs",
-   5.990, 8.990, 4.8, 310, 100, "PACK x2", "https://images.unsplash.com/photo-1544652478-6653e09f18a2?auto=format&fit=crop&w=800&q=80",
+   5.990, 8.990, 4.8, 310, 100, "PACK x2", "public/assets/hub.jpg",
    "Convertidor súper compacto OTG metálico para conectar pendrives, mouses o teclados a smartphones/laptops.",
-   json.dumps(["Velocidad 5Gbps USB 3.0", "Cuerpo de aleación de zinc", "Función Plug and Play", "Compatible con Android/Mac/PC"])),
+   json.dumps(["Velocidad 5Gbps USB 3.0", "Cuerpo de aleación de zinc"])),
 
-  # REPUESTOS & ACCESORIOS
   ("prod-11", "Base Magnética Redonda de Repuesto + Adhesivo 3M", "Repuestos & Accesorios",
-   7.990, 11.990, 4.85, 42, 60, "REPUESTO REDONDO", "https://images.unsplash.com/photo-1585338107529-13afc5f02586?auto=format&fit=crop&w=800&q=80",
+   7.990, 11.990, 4.85, 42, 60, "REPUESTO REDONDO", "public/assets/lamp.jpg",
    "Soporte magnético circular redonda de repuesto compatible con lámparas tipo disco recargables TecnoCalidad.",
-   json.dumps(["Imán Circular N52", "Cinta 3M VHB adhesiva", "Rotación multidireccional"])),
+   json.dumps(["Imán Circular N52", "Cinta 3M VHB adhesiva"])),
 
   ("prod-12", "Pack Batería de Repuesto Li-ion 5000mAh 3.7V", "Repuestos & Accesorios",
-   12.990, 16.990, 4.9, 29, 20, "ORIGINAL", "https://images.unsplash.com/photo-1619725002198-6a689b72f41d?auto=format&fit=crop&w=800&q=80",
+   12.990, 16.990, 4.9, 29, 20, "ORIGINAL", "public/assets/charger.jpg",
    "Celda de batería de litio de alta capacidad con circuito de protección BMS de repuesto para gadgets tech.",
-   json.dumps(["Capacidad 5000mAh", "Protección contra sobrecarga", "Conector JST 2-pin standard"])),
+   json.dumps(["Capacidad 5000mAh", "Protección sobrecarga BMS"])),
 
-  # CABLES & CARGA RÁPIDA
   ("prod-2", "Cable USB-C PD 100W Display Digital Wattage", "Cables & Carga Rápida",
-   18.990, 24.990, 4.8, 94, 40, "ALTA TECNOLOGÍA", "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80",
+   18.990, 24.990, 4.8, 94, 40, "ALTA TECNOLOGÍA", "public/assets/cable.jpg",
    "Cable USB-C 100W con pantalla LED que muestra vatios en tiempo real.",
-   json.dumps(["100W Power Delivery", "480 Mbps transmisión", "1.5m trenzado nylon", "Pantalla digital LED"])),
+   json.dumps(["100W Power Delivery", "480 Mbps transmisión", "Pantalla LED"])),
 
-  # AUDIO & AUDÍFONOS
   ("prod-3", "Audífonos Inalámbricos ANC Pro Studio Edition", "Audio & Audífonos",
-   89.990, 119.990, 4.95, 210, 12, "CANCELACIÓN DE RUIDO", "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+   89.990, 119.990, 4.95, 210, 12, "CANCELACIÓN DE RUIDO", "public/assets/headphones.jpg",
    "Over-Ear ANC -45dB, Hi-Res Audio, Bluetooth 5.4, 60h de autonomía.",
-   json.dumps(["ANC Híbrido -45dB", "60h autonomía", "Bluetooth 5.4 + AUX 3.5mm", "Carga rápida 10 min"])),
+   json.dumps(["ANC Híbrido -45dB", "60h autonomía", "Bluetooth 5.4"])),
 
-  # GADGETS TECH
   ("prod-4", "Estación 3 en 1 MagTech Station & Ambient Light", "Gadgets Tech",
-   49.990, 69.990, 4.88, 76, 18, "NUEVO", "https://images.unsplash.com/photo-1586953208448-b95a79798f07?auto=format&fit=crop&w=800&q=80",
+   49.990, 69.990, 4.88, 76, 18, "NUEVO", "public/assets/dock.jpg",
    "Carga inalámbrica 15W MagSafe para Smartphone, Smartwatch y TWS.",
-   json.dumps(["15W MagSafe Compatible", "Luz ambiental 3 modos", "Control térmico", "Entrada USB-C PD 30W"]))
+   json.dumps(["15W MagSafe Compatible", "Luz ambiental 3 modos"]))
 ]
 
 def init_db():
@@ -371,7 +364,7 @@ if __name__ == "__main__":
     print("=" * 60)
     print("  TecnoCalidad E-Commerce - Backend Server")
     print("=" * 60)
-    print("  [*] Actualizando catalogo con imagenes HD de proveedores AliExpress...")
+    print("  [*] Configurando imagenes locales garantizadas (public/assets/)...")
     init_db()
     print(f"  [OK] Base de datos SQLite conectada: {os.path.abspath(DB_PATH)}")
     print(f"  [WEB] Servidor ejecutandose en: http://{HOST}:{PORT}")
