@@ -264,6 +264,7 @@ function App() {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [createdOrder, setCreatedOrder] = useState(null);
   const [selectedProdModal, setSelectedProdModal] = useState(null);
+  const [logoClicks, setLogoClicks] = useState(0);
   const [shipping, setShipping] = useState({
     name: 'Carlos Mendoza', email: 'cliente@tecnocalidad.cl',
     phone: '+56 9 1234 5678', address: 'Av. Providencia 1234, Apt 502', city: 'Santiago'
@@ -277,6 +278,33 @@ function App() {
   useEffect(() => {
     localStorage.setItem('tc_wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
+
+  // Acceso discreto al Admin si incluye ?admin=true en la URL o Ctrl+Alt+A
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('admin')) {
+      setShowLogin(true);
+    }
+
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey && e.altKey && (e.key === 'a' || e.key === 'A')) {
+        setShowLogin(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleLogoClick = () => {
+    setLogoClicks(prev => {
+      const next = prev + 1;
+      if (next >= 4) {
+        setShowLogin(true);
+        return 0;
+      }
+      return next;
+    });
+  };
 
   const showToast = (msg) => {
     setToast(msg);
@@ -344,7 +372,6 @@ function App() {
     if (window.confetti) window.confetti({ particleCount: 130, spread: 85, origin: { y: 0.6 } });
   };
 
-  // Sugerencias de búsqueda predictiva en tiempo real
   const searchSuggestions = search.trim() ? products.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
     p.category.toLowerCase().includes(search.toLowerCase())
@@ -366,13 +393,13 @@ function App() {
     <div className="min-h-screen flex flex-col">
       {toast && <div className="toast">⚡ {toast}</div>}
 
-      {/* HEADER CON BUSCADOR PREDICTIVO */}
+      {/* HEADER SIN BOTÓN ADMIN VISIBLE */}
       <header className="glass-nav sticky top-0 z-40 px-5 py-4 flex items-center justify-between">
-        <button onClick={() => setIsAdmin(false)} className="flex items-center gap-2.5">
+        <button onClick={handleLogoClick} className="flex items-center gap-2.5 text-left">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center text-black font-black text-lg">⚡</div>
-          <div className="text-left">
+          <div>
             <div className="text-lg font-extrabold text-white leading-none">TECNO <span className="grad-text">CALIDAD</span></div>
-            <div className="text-[9px] font-bold text-cyan-400 tracking-widest uppercase">Proveedores AliExpress & Tech Direct</div>
+            <div className="text-[9px] font-bold text-cyan-400 tracking-widest uppercase">Alta Tecnología & Gadgets</div>
           </div>
         </button>
 
@@ -387,7 +414,6 @@ function App() {
               onChange={e => setSearch(e.target.value)}
               className="field w-full"
             />
-            {/* Sugerencias de Autocompletado */}
             {searchFocused && searchSuggestions.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-slate-700 rounded-xl p-2 shadow-2xl z-50">
                 <div className="text-[10px] font-bold text-cyan-400 px-3 py-1 uppercase">Sugerencias Predictivas</div>
@@ -410,13 +436,10 @@ function App() {
         )}
 
         <div className="flex items-center gap-2.5">
-          {adminToken ? (
-            <button onClick={() => setIsAdmin(!isAdmin)} className="px-3 py-1.5 rounded-xl text-xs font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-400">
-              {isAdmin ? '🛍️ Ver Tienda' : '⚙️ Admin'}
-            </button>
-          ) : (
-            <button onClick={() => setShowLogin(true)} className="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-slate-300">
-              🔑 Admin
+          {/* Si está logueado como admin, muestra volver a tienda */}
+          {isAdmin && (
+            <button onClick={() => setIsAdmin(false)} className="px-3 py-1.5 rounded-xl text-xs font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-400">
+              🛍️ Ver Tienda
             </button>
           )}
 
@@ -440,7 +463,7 @@ function App() {
             <div className="max-w-6xl mx-auto px-5">
               <div className="glass p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
                 <div className="max-w-xl">
-                  <span className="badge inline-block mb-3">⚡ FASE 1: Variantes, Wishlist & Buscador Predictivo</span>
+                  <span className="badge inline-block mb-3">⚡ AliExpress Suppliers Direct & Calidad Garantizada</span>
                   <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-3">
                     Cargadores, Adaptadores & <span className="grad-text">Repuestos Tech</span>
                   </h1>
@@ -469,7 +492,7 @@ function App() {
             </div>
           </section>
 
-          {/* PRODUCT GRID CON VARIANTES & WISHLIST */}
+          {/* PRODUCT GRID */}
           <section className="max-w-6xl mx-auto px-5 py-8">
             {filtered.length === 0 ? (
               <div className="glass p-12 rounded-2xl text-center text-slate-400">
@@ -491,7 +514,6 @@ function App() {
                       onClick={() => setSelectedProdModal(p)}
                       className="card glass p-4 rounded-2xl flex flex-col justify-between cursor-pointer relative"
                     >
-                      {/* Botón Wishlist */}
                       <button
                         onClick={(e) => toggleWishlist(p, e)}
                         className="absolute top-6 right-6 z-10 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-sm border border-slate-700 hover:scale-110 transition-transform"
@@ -507,13 +529,11 @@ function App() {
                         <div className="text-[10px] font-bold text-cyan-400 uppercase mb-1">{p.category}</div>
                         <h3 className="text-sm font-bold text-white line-clamp-2 mb-1">{p.name}</h3>
                         
-                        {/* Puntuación ⭐ */}
                         <div className="flex items-center gap-1.5 text-xs text-amber-400 font-bold mb-2">
                           <span>⭐ {p.rating}</span>
                           <span className="text-slate-400 text-[10px]">({p.reviewsCount} opiniones)</span>
                         </div>
 
-                        {/* Selector de Variantes */}
                         {p.variants && (
                           <div className="mb-3" onClick={e => e.stopPropagation()}>
                             <label className="text-[10px] font-bold text-slate-400 block mb-1">Opción / Variante:</label>
@@ -551,12 +571,12 @@ function App() {
       ) : (
         /* ADMIN DASHBOARD */
         <main className="flex-1 max-w-6xl w-full mx-auto p-6">
-          <h1 className="text-2xl font-black text-white mb-4">Panel TecnoCalidad (Shopify Style)</h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-black text-white">Panel TecnoCalidad</h1>
+            <button onClick={() => { setIsAdmin(false); sessionStorage.removeItem('tc_token'); setAdminToken(null); }} className="text-xs text-rose-400 font-bold hover:underline">Cerrar Sesión Admin</button>
+          </div>
           <div className="glass p-6 rounded-2xl space-y-4">
-            <div className="flex justify-between items-center border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-bold text-white">Productos en Catálogo ({products.length})</h3>
-              <span className="text-xs text-emerald-400 font-bold">Variantes & Wishlist Activos</span>
-            </div>
+            <h3 className="text-sm font-bold text-white">Productos en Catálogo ({products.length})</h3>
             <div className="space-y-2 text-xs">
               {products.map(p => (
                 <div key={p.id} className="p-3 bg-slate-950 rounded-xl flex justify-between items-center">
@@ -569,9 +589,11 @@ function App() {
         </main>
       )}
 
-      {/* FOOTER */}
+      {/* FOOTER CON ENLACE DISCRETO A ADMIN */}
       <footer className="mt-auto border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} TecnoCalidad · FASE 1: Variantes de Producto, Wishlist & Buscador Predictivo
+        <span onClick={() => setShowLogin(true)} className="cursor-pointer hover:text-slate-400">
+          © {new Date().getFullYear()} TecnoCalidad · Todos los derechos reservados.
+        </span>
       </footer>
 
       {/* MODAL DETALLE DE PRODUCTO */}
@@ -665,7 +687,7 @@ function App() {
 
             {checkoutStep === 'payment' && (
               <form onSubmit={handleCompleteOrder} className="space-y-3 text-xs">
-                <h3 className="font-bold text-cyan-400 uppercase">2. Medio de Pago Visual</h3>
+                <h3 className="font-bold text-cyan-400 uppercase">2. Medio de Pago</h3>
                 <div className="space-y-2">
                   <label onClick={() => setPayMethod('webpay')} className={`block p-3 rounded-xl border cursor-pointer transition-all ${payMethod === 'webpay' ? 'border-cyan-400 bg-cyan-500/10 font-bold text-white' : 'border-slate-800 bg-slate-950 text-slate-300'}`}>
                     💳 Transbank Webpay Plus (Débito/Crédito Chile)
@@ -699,7 +721,7 @@ function App() {
         </div>
       )}
 
-      {/* LOGIN ADMIN MODAL */}
+      {/* LOGIN ADMIN MODAL (ESCONDIDO/DISCRETO) */}
       {showLoginModal && (
         <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
           <div className="glass w-full max-w-sm bg-slate-900 p-6 rounded-2xl relative">
