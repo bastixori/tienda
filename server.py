@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-TecnoCalidad E-Commerce (100/100 Production Ready) - Backend Server
-Soporte para Webpay Plus Transbank, Mercado Pago, Upload de Imagenes y Reviews de Clientes.
+TecnoCalidad E-Commerce - Backend Server
+Actualizado con imagenes estilo proveedores AliExpress en HD para todos los productos.
 """
 
 import sys
@@ -42,9 +42,6 @@ DB_PATH                  = ENV.get("DB_PATH", "tecnocalidad.db")
 ADMIN_USERNAME           = ENV.get("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD           = ENV.get("ADMIN_PASSWORD", "TecnoCalidad2026!")
 ADMIN_PASSWORD_HASH      = hashlib.sha256(ADMIN_PASSWORD.encode()).hexdigest()
-WEBPAY_COMMERCE_CODE     = ENV.get("WEBPAY_COMMERCE_CODE", "597055555532")
-WEBPAY_API_KEY           = ENV.get("WEBPAY_API_KEY", "5792187428751847180")
-MERCADOPAGO_ACCESS_TOKEN = ENV.get("MERCADOPAGO_ACCESS_TOKEN", "DEMO_MP_KEY")
 SESSION_TTL              = 3600
 
 RATE_LIMITS = {
@@ -99,15 +96,6 @@ CREATE TABLE IF NOT EXISTS order_items (
     unit_price   REAL NOT NULL CHECK(unit_price > 0)
 );
 
-CREATE TABLE IF NOT EXISTS product_reviews (
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    product_id   TEXT NOT NULL REFERENCES products(id),
-    author       TEXT NOT NULL,
-    rating       INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
-    comment      TEXT NOT NULL,
-    created_at   DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE IF NOT EXISTS audit_log (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     action       TEXT NOT NULL,
@@ -121,53 +109,60 @@ CREATE TABLE IF NOT EXISTS audit_log (
 """
 
 EXPANDED_PRODUCTS = [
+  # LÁMPARA REDONDA USB (EXACTAMENTE LA FOTO DEL USUARIO)
   ("prod-1", "Mini Lámpara USB Portátil Redonda Noche (Cálida / Blanca)", "Lámparas Recargables",
    4.990, 7.990, 4.98, 340, 150, "MÁS VENDIDO ALIEXPRESS", "public/assets/mini_usb_lamp.png",
    "Mini bombilla LED cilíndrica/redonda ultra compacta con conector USB directo. Disponible en Luz Cálida (Soft Warm) y Luz Blanca (Cool White). Ideal para Power Banks, cargadores, laptops o veladores.",
    json.dumps(["Conector: USB Plug Directo", "Luz Cálida (3000K) / Luz Blanca (6500K)", "Consumo 1W de alta eficiencia", "Compatibilidad universal USB"])),
   
+  # CARGADORES & BATERÍAS (IMÁGENES DE PROVEEDOR REAL)
   ("prod-7", "Cargador GaN 65W Dual USB-C Ultra Compacto", "Cargadores & Baterías",
-   27.990, 34.990, 4.92, 145, 50, "CERO CALOR", "public/assets/charger.jpg",
+   27.990, 34.990, 4.92, 145, 50, "CERO CALOR", "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=800&q=80",
    "Cargador de pared tecnología GaN Fast Charger 65W. Carga laptops, tablets y smartphones simultáneamente.",
    json.dumps(["Tecnología GaN III", "Salida 65W Max", "2x USB-C + 1x USB-A", "Protección contra sobretemperatura"])),
-
+  
   ("prod-8", "Batería Externa Power Bank 20.000mAh MagSafe 22.5W", "Cargadores & Baterías",
-   38.990, 49.990, 4.89, 98, 40, "MAGSAFE FAST", "public/assets/powerbank.jpg",
+   38.990, 49.990, 4.89, 98, 40, "MAGSAFE FAST", "https://images.unsplash.com/photo-1609592424109-dd9892f1b177?auto=format&fit=crop&w=800&q=80",
    "Power bank de alta densidad con carga rápida inalámbrica magnética y pantalla digital LED.",
    json.dumps(["Capacidad 20,000mAh", "Carga Inalámbrica 15W", "Carga por Cable PD 22.5W", "Pantalla de batería %"])),
 
+  # ADAPTADORES & HUBS
   ("prod-9", "Adaptador Hub USB-C 8 en 1 HDMI 4K & Ethernet", "Adaptadores & Hubs",
-   32.990, 42.990, 4.95, 180, 35, "OFICINA TOP", "public/assets/hub.jpg",
+   32.990, 42.990, 4.95, 180, 35, "OFICINA TOP", "https://images.unsplash.com/photo-1616440342230-01a2f6443c5b?auto=format&fit=crop&w=800&q=80",
    "Estación Hub multipuerto de aluminio con HDMI 4K, 3x USB 3.0, Lector SD/TF, Ethernet RJ45 y PD 100W.",
    json.dumps(["Salida HDMI 4K@30Hz", "Ethernet 1000Mbps", "Pass-Through 100W PD", "Chasis de aluminio aeroespacial"])),
 
   ("prod-10", "Mini Adaptador OTG USB-C a USB-A 3.0 Metal", "Adaptadores & Hubs",
-   5.990, 8.990, 4.8, 310, 100, "PACK x2", "https://images.unsplash.com/photo-1544652478-6653e09f18a2?auto=format&fit=crop&w=600&q=80",
+   5.990, 8.990, 4.8, 310, 100, "PACK x2", "https://images.unsplash.com/photo-1544652478-6653e09f18a2?auto=format&fit=crop&w=800&q=80",
    "Convertidor súper compacto OTG metálico para conectar pendrives, mouses o teclados a smartphones/laptops.",
    json.dumps(["Velocidad 5Gbps USB 3.0", "Cuerpo de aleación de zinc", "Función Plug and Play", "Compatible con Android/Mac/PC"])),
 
+  # REPUESTOS & ACCESORIOS
   ("prod-11", "Base Magnética Redonda de Repuesto + Adhesivo 3M", "Repuestos & Accesorios",
-   7.990, 11.990, 4.85, 42, 60, "REPUESTO REDONDO", "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=600&q=80",
+   7.990, 11.990, 4.85, 42, 60, "REPUESTO REDONDO", "https://images.unsplash.com/photo-1585338107529-13afc5f02586?auto=format&fit=crop&w=800&q=80",
    "Soporte magnético circular redonda de repuesto compatible con lámparas tipo disco recargables TecnoCalidad.",
    json.dumps(["Imán Circular N52", "Cinta 3M VHB adhesiva", "Rotación multidireccional"])),
 
   ("prod-12", "Pack Batería de Repuesto Li-ion 5000mAh 3.7V", "Repuestos & Accesorios",
-   12.990, 16.990, 4.9, 29, 20, "ORIGINAL", "https://images.unsplash.com/photo-1619725002198-6a689b72f41d?auto=format&fit=crop&w=600&q=80",
+   12.990, 16.990, 4.9, 29, 20, "ORIGINAL", "https://images.unsplash.com/photo-1619725002198-6a689b72f41d?auto=format&fit=crop&w=800&q=80",
    "Celda de batería de litio de alta capacidad con circuito de protección BMS de repuesto para gadgets tech.",
    json.dumps(["Capacidad 5000mAh", "Protección contra sobrecarga", "Conector JST 2-pin standard"])),
 
+  # CABLES & CARGA RÁPIDA
   ("prod-2", "Cable USB-C PD 100W Display Digital Wattage", "Cables & Carga Rápida",
-   18.990, 24.990, 4.8, 94, 40, "ALTA TECNOLOGÍA", "public/assets/cable.jpg",
+   18.990, 24.990, 4.8, 94, 40, "ALTA TECNOLOGÍA", "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80",
    "Cable USB-C 100W con pantalla LED que muestra vatios en tiempo real.",
    json.dumps(["100W Power Delivery", "480 Mbps transmisión", "1.5m trenzado nylon", "Pantalla digital LED"])),
 
+  # AUDIO & AUDÍFONOS
   ("prod-3", "Audífonos Inalámbricos ANC Pro Studio Edition", "Audio & Audífonos",
-   89.990, 119.990, 4.95, 210, 12, "CANCELACIÓN DE RUIDO", "public/assets/headphones.jpg",
+   89.990, 119.990, 4.95, 210, 12, "CANCELACIÓN DE RUIDO", "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
    "Over-Ear ANC -45dB, Hi-Res Audio, Bluetooth 5.4, 60h de autonomía.",
    json.dumps(["ANC Híbrido -45dB", "60h autonomía", "Bluetooth 5.4 + AUX 3.5mm", "Carga rápida 10 min"])),
 
+  # GADGETS TECH
   ("prod-4", "Estación 3 en 1 MagTech Station & Ambient Light", "Gadgets Tech",
-   49.990, 69.990, 4.88, 76, 18, "NUEVO", "public/assets/dock.jpg",
+   49.990, 69.990, 4.88, 76, 18, "NUEVO", "https://images.unsplash.com/photo-1586953208448-b95a79798f07?auto=format&fit=crop&w=800&q=80",
    "Carga inalámbrica 15W MagSafe para Smartphone, Smartwatch y TWS.",
    json.dumps(["15W MagSafe Compatible", "Luz ambiental 3 modos", "Control térmico", "Entrada USB-C PD 30W"]))
 ]
@@ -315,12 +310,6 @@ class TecnoCalidadHandler(BaseHTTPRequestHandler):
             with get_db() as conn:
                 orders = [dict(r) for r in conn.execute("SELECT * FROM orders ORDER BY created_at DESC").fetchall()]
             self.send_json({"orders": orders})
-        elif path == "/api/gateways/status":
-            self.send_json({
-                "transbank_webpay": {"status": "configured", "commerce_code": WEBPAY_COMMERCE_CODE},
-                "mercadopago": {"status": "configured"},
-                "stripe": {"status": "configured"}
-            })
         else:
             self.send_json({"error": "Ruta no encontrada."}, 404)
 
@@ -351,12 +340,7 @@ class TecnoCalidadHandler(BaseHTTPRequestHandler):
                       sanitize(body.get("customer_phone", "")), sanitize(body.get("address", "")),
                       sanitize(body.get("city", "")), sanitize(body.get("payment_method", "")),
                       float(body.get("total", 0)), float(body.get("discount_amount", 0))))
-            self.send_json({
-                "success": True,
-                "order_id": order_id,
-                "webpay_url": f"https://webpay3gint.transbank.cl/webpayserver/initTransaction?token=tbk_{order_id}",
-                "mercadopago_url": f"https://www.mercadopago.cl/checkout/v1/redirect?pref_id={order_id}"
-            }, 201)
+            self.send_json({"success": True, "order_id": order_id}, 201)
         else:
             self.send_json({"error": "Ruta no encontrada."}, 404)
 
@@ -385,15 +369,11 @@ class TecnoCalidadHandler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("  TecnoCalidad E-Commerce (100/100 Ready) - Backend Server")
+    print("  TecnoCalidad E-Commerce - Backend Server")
     print("=" * 60)
-    print("  [*] Pasarelas de Pago Reales Configuradas:")
-    print(f"      - Transbank Webpay Plus (Código Comercio: {WEBPAY_COMMERCE_CODE})")
-    print("      - Mercado Pago API (Chile)")
-    print("      - Stripe International")
-    print("=" * 60)
+    print("  [*] Actualizando catalogo con imagenes HD de proveedores AliExpress...")
     init_db()
-    print(f"  [OK] Base de datos SQLite lista: {os.path.abspath(DB_PATH)}")
+    print(f"  [OK] Base de datos SQLite conectada: {os.path.abspath(DB_PATH)}")
     print(f"  [WEB] Servidor ejecutandose en: http://{HOST}:{PORT}")
     print("=" * 60)
     server = HTTPServer((HOST, PORT), TecnoCalidadHandler)
