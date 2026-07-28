@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TecnoCalidad | Gadgets, Cargadores, Adaptadores & Repuestos Tech</title>
+  <meta name="description" content="Tienda e-commerce de alta tecnología: cargadores GaN, baterías externas power bank, adaptadores hub USB-C, repuestos de lámparas recargables y más." />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --bg-primary: #080b11;
+      --bg-card: rgba(18,26,41,.75);
+      --border: rgba(255,255,255,.08);
+      --border-glow: rgba(0,240,255,.35);
+      --text: #f8fafc;
+      --cyan: #00f0ff;
+    }
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-card: rgba(255,255,255,.92);
+      --border: rgba(0,0,0,.08);
+      --border-glow: rgba(59,130,246,.4);
+      --text: #0f172a;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-primary);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: radial-gradient(circle at 50% 0%, rgba(0,240,255,.08) 0%, transparent 65%);
+      background-attachment: fixed;
+    }
+    .glass { background: var(--bg-card); backdrop-filter: blur(16px); border: 1px solid var(--border); }
+    .glass-nav { background: rgba(8,11,17,.88); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    [data-theme="light"] .glass-nav { background: rgba(255,255,255,.9); }
+    .grad-text { background: linear-gradient(135deg,#00f0ff,#3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .grad-btn {
+      background: linear-gradient(135deg,#00f0ff,#3b82f6); color:#000; font-weight:700;
+      border:none; border-radius:12px; cursor:pointer;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 15px rgba(0,240,255,.22);
+    }
+    .grad-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,240,255,.38); }
+    .card { transition: transform .3s, border-color .3s, box-shadow .3s; }
+    .card:hover { transform: translateY(-5px); border-color: var(--border-glow); box-shadow: 0 12px 30px rgba(0,240,255,.18); }
+    .badge { background:rgba(0,240,255,.12); color:#00f0ff; border:1px solid rgba(0,240,255,.3); padding:2px 9px; border-radius:999px; font-size:.7rem; font-weight:800; }
+    .toast {
+      position:fixed; bottom:22px; right:22px; z-index:200;
+      background:#0f172a; border:1px solid var(--cyan); color:#fff;
+      padding:12px 20px; border-radius:12px; font-weight:700; font-size:.85rem;
+      box-shadow:0 10px 25px rgba(0,0,0,.5),0 0 15px rgba(0,240,255,.25);
+    }
+    .field { width:100%; background:rgba(15,23,42,.8); border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:9px 13px; color:var(--text); font-size:.8rem; }
+    .field:focus { outline:none; border-color:var(--cyan); }
+    ::-webkit-scrollbar { height: 6px; width:6px; }
+    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.15); border-radius:3px; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useCallback } = React;
+
+const fmtCLP = (n) =>
+  new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP',maximumFractionDigits:0}).format(n * 1000);
+
+const CATEGORIES = [
+  'Todos',
+  'Cargadores & Baterías',
+  'Adaptadores & Hubs',
+  'Lámparas Recargables',
+  'Repuestos & Accesorios',
+  'Cables & Carga Rápida',
+  'Audio & Audífonos',
+  'Gadgets Tech'
+];
+
+function App() {
+  const [theme, setTheme] = useState(() => localStorage.getItem('tc_theme') || 'dark');
+  const [adminToken, setAdminToken] = useState(() => sessionStorage.getItem('tc_token') || null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState('Todos');
+  const [search, setSearch] = useState('');
+  const [cart, setCart] = useState([]);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [checkoutStep, setCheckStep] = useState('shipping');
+  const [payMethod, setPayMethod] = useState('webpay');
+  const [toast, setToast] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [showLoginModal, setShowLogin] = useState(false);
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+  const [createdOrder, setCreatedOrder] = useState(null);
+  const [shipping, setShipping] = useState({
+    name: 'Carlos Mendoza', email: 'cliente@tecnocalidad.cl',
+    phone: '+56 9 1234 5678', address: 'Av. Providencia 1234, Apt 502', city: 'Santiago'
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('tc_theme', theme);
+  }, [theme]);
+
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const loadProducts = useCallback(async () => {
+    try {
+      const res = await fetch('/api/products');
+      const data = await res.json();
+      if (data.products) setProducts(data.products);
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  useEffect(() => { loadProducts(); }, [loadProducts]);
+
+  const addToCart = (p) => {
+    setCart(prev => {
+      const found = prev.find(i => i.id === p.id);
+      if (found) return prev.map(i => i.id === p.id ? { ...i, quantity: i.quantity + 1 } : i);
+      return [...prev, { ...p, quantity: 1 }];
+    });
+    showToast(`" ${p.name.slice(0, 25)}…" agregado al carrito`);
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(loginForm)
+    });
+    const data = await res.json();
+    if (res.ok) {
+      sessionStorage.setItem('tc_token', data.token);
+      setAdminToken(data.token);
+      setShowLogin(false);
+      setIsAdmin(true);
+      showToast('¡Sesión admin iniciada!');
+    } else {
+      showToast(data.error || 'Credenciales incorrectas');
+    }
+  };
+
+  const handleCompleteOrder = async (e) => {
+    e.preventDefault();
+    const rawSubtotal = cart.reduce((a, b) => a + b.price * b.quantity, 0);
+    const shipping_fee = rawSubtotal * 1000 >= 50000 ? 0 : 3.990;
+    const finalTotal = rawSubtotal + shipping_fee;
+
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customer_name: shipping.name,
+        customer_email: shipping.email,
+        customer_phone: shipping.phone,
+        address: shipping.address,
+        city: shipping.city,
+        payment_method: payMethod,
+        items: cart,
+        total: finalTotal
+      })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setCreatedOrder({ id: data.order_id, total: finalTotal, customer: shipping.name });
+      setCart([]);
+      setCheckStep('confirmation');
+      if (window.confetti) window.confetti({ particleCount: 100, spread: 70 });
+    }
+  };
+
+  const filtered = products.filter(p => {
+    const catOk = category === 'Todos' || p.category === category;
+    const srchOk = !search || p.name.toLowerCase().includes(search.toLowerCase()) || (p.description || '').toLowerCase().includes(search.toLowerCase());
+    return catOk && srchOk;
+  });
+
+  const cartCount = cart.reduce((a, b) => a + b.quantity, 0);
+  const rawSub = cart.reduce((a, b) => a + b.price * b.quantity, 0);
+  const shipFee = (rawSub * 1000 >= 50000 || !cart.length) ? 0 : 3.990;
+  const totPay = rawSub + shipFee;
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {toast && <div className="toast">⚡ {toast}</div>}
+
+      {/* HEADER */}
+      <header className="glass-nav sticky top-0 z-40 px-5 py-4 flex items-center justify-between">
+        <button onClick={() => setIsAdmin(false)} className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center text-black font-black text-lg">⚡</div>
+          <div className="text-left">
+            <div className="text-lg font-extrabold text-white leading-none">TECNO <span className="grad-text">CALIDAD</span></div>
+            <div className="text-[9px] font-bold text-cyan-400 tracking-widest uppercase">Proveedores AliExpress & Tech Direct</div>
+          </div>
+        </button>
+
+        {!isAdmin && (
+          <div className="hidden md:block flex-1 max-w-md mx-6">
+            <input
+              type="search"
+              placeholder="Buscar cargadores GaN, repuestos, adaptadores, lámparas..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="field w-full"
+            />
+          </div>
+        )}
+
+        <div className="flex items-center gap-2.5">
+          {adminToken ? (
+            <button onClick={() => setIsAdmin(!isAdmin)} className="px-3 py-1.5 rounded-xl text-xs font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-400">
+              {isAdmin ? '🛍️ Ver Tienda' : '⚙️ Admin'}
+            </button>
+          ) : (
+            <button onClick={() => setShowLogin(true)} className="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 border border-slate-700 text-slate-300">
+              🔑 Admin
+            </button>
+          )}
+
+          <button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} className="w-8 h-8 rounded-full bg-slate-800 text-sm flex items-center justify-center">
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+
+          {!isAdmin && (
+            <button onClick={() => setCartOpen(true)} className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cyan-500/15 border border-cyan-500/35 text-white font-bold text-xs">
+              🛒 Carrito ({cartCount})
+            </button>
+          )}
+        </div>
+      </header>
+
+      {/* MAIN STOREFRONT */}
+      {!isAdmin ? (
+        <main className="flex-1">
+          {/* HERO BANNER */}
+          <section className="border-b border-slate-800/60 pt-6 pb-8">
+            <div className="max-w-6xl mx-auto px-5">
+              <div className="glass p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
+                <div className="max-w-xl">
+                  <span className="badge inline-block mb-3">⚡ AliExpress Suppliers Direct & Calidad Garantizada</span>
+                  <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-3">
+                    Cargadores, Adaptadores & <span className="grad-text">Repuestos Tech</span>
+                  </h1>
+                  <p className="text-slate-300 text-xs sm:text-sm">
+                    Cargadores ultra rápidos GaN 65W, adaptadores Hub USB-C 8-in-1, baterías externas MagSafe y repuestos para lámparas recargables.
+                  </p>
+                </div>
+              </div>
+
+              {/* CATEGORIES SCROLL */}
+              <div className="flex gap-2 overflow-x-auto py-5 no-scrollbar">
+                {CATEGORIES.map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setCategory(cat)}
+                    className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${
+                      category === cat
+                        ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-black border-cyan-300 shadow-md'
+                        : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-600'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* PRODUCT GRID */}
+          <section className="max-w-6xl mx-auto px-5 py-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {filtered.map(p => (
+                <div key={p.id} className="card glass p-4 rounded-2xl flex flex-col justify-between">
+                  <div>
+                    <div className="relative aspect-square rounded-xl overflow-hidden bg-slate-950 mb-3">
+                      <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                      {p.badge && <span className="absolute top-2 left-2 badge">{p.badge}</span>}
+                    </div>
+                    <div className="text-[10px] font-bold text-cyan-400 uppercase mb-1">{p.category}</div>
+                    <h3 className="text-sm font-bold text-white line-clamp-2 mb-1">{p.name}</h3>
+                    <p className="text-xs text-slate-400 line-clamp-2">{p.description}</p>
+                  </div>
+                  <div className="pt-3 mt-3 border-t border-slate-800 flex items-center justify-between">
+                    <div>
+                      <div className="font-black text-white">{fmtCLP(p.price)}</div>
+                      {p.oldPrice && <div className="text-[10px] text-slate-500 line-through">{fmtCLP(p.oldPrice)}</div>}
+                    </div>
+                    <button onClick={() => addToCart(p)} className="grad-btn px-3 py-1.5 text-xs rounded-xl">
+                      + Agregar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </main>
+      ) : (
+        /* ADMIN DASHBOARD */
+        <main className="flex-1 max-w-6xl w-full mx-auto p-6">
+          <h1 className="text-2xl font-black text-white mb-4">Panel TecnoCalidad (Shopify Style)</h1>
+          <div className="glass p-6 rounded-2xl">
+            <h3 className="text-sm font-bold text-white mb-3">Productos en BD ({products.length})</h3>
+            <div className="space-y-2 text-xs">
+              {products.map(p => (
+                <div key={p.id} className="p-3 bg-slate-950 rounded-xl flex justify-between items-center">
+                  <span>{p.name} ({p.category})</span>
+                  <span className="font-bold text-cyan-400">{fmtCLP(p.price)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+      )}
+
+      {/* FOOTER */}
+      <footer className="mt-auto border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
+        © {new Date().getFullYear()} TecnoCalidad · Proveedores AliExpress & Tech Direct
+      </footer>
+
+      {/* CART DRAWER */}
+      {cartOpen && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex justify-end">
+          <div className="w-full max-w-md bg-slate-900 p-6 flex flex-col h-full border-l border-slate-800">
+            <div className="flex justify-between items-center pb-4 border-b border-slate-800">
+              <h2 className="font-bold text-white">Carrito TecnoCalidad ({cartCount})</h2>
+              <button onClick={() => setCartOpen(false)} className="text-slate-400 text-lg">✕</button>
+            </div>
+            <div className="flex-1 overflow-y-auto py-4 space-y-3">
+              {cart.map(item => (
+                <div key={item.id} className="bg-slate-950 p-3 rounded-xl flex items-center justify-between text-xs">
+                  <div>
+                    <div className="font-bold text-white">{item.name}</div>
+                    <div className="text-cyan-400 font-bold">{fmtCLP(item.price)} x {item.quantity}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {cart.length > 0 && (
+              <div className="pt-4 border-t border-slate-800">
+                <div className="flex justify-between font-bold text-white mb-4 text-sm">
+                  <span>Total:</span>
+                  <span className="grad-text">{fmtCLP(totPay)}</span>
+                </div>
+                <button onClick={() => { setCartOpen(false); setCheckoutOpen(true); }} className="w-full grad-btn py-3 text-xs">
+                  Ir al Checkout →
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* CHECKOUT MODAL */}
+      {checkoutOpen && (
+        <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
+          <div className="glass w-full max-w-md bg-slate-900 p-6 rounded-2xl relative">
+            {checkoutStep !== 'confirmation' && (
+              <button onClick={() => setCheckoutOpen(false)} className="absolute top-4 right-4 text-slate-400">✕</button>
+            )}
+            {checkoutStep === 'shipping' && (
+              <form onSubmit={() => setCheckStep('payment')} className="space-y-3 text-xs">
+                <h3 className="font-bold text-cyan-400 uppercase">Datos de Envío</h3>
+                <input type="text" required value={shipping.name} onChange={e => setShipping({...shipping, name: e.target.value})} className="field" placeholder="Nombre completo" />
+                <input type="email" required value={shipping.email} onChange={e => setShipping({...shipping, email: e.target.value})} className="field" placeholder="Correo electrónico" />
+                <input type="text" required value={shipping.address} onChange={e => setShipping({...shipping, address: e.target.value})} className="field" placeholder="Dirección completa" />
+                <button type="submit" className="w-full grad-btn py-3 mt-2">Continuar a Pago</button>
+              </form>
+            )}
+
+            {checkoutStep === 'payment' && (
+              <form onSubmit={handleCompleteOrder} className="space-y-3 text-xs">
+                <h3 className="font-bold text-cyan-400 uppercase">Método de Pago</h3>
+                <div className="p-3 bg-slate-950 rounded-xl border border-cyan-400 font-bold">💳 Webpay Plus / Mercado Pago / Stripe</div>
+                <button type="submit" className="w-full grad-btn py-3 mt-2">Confirmar y Pagar {fmtCLP(totPay)}</button>
+              </form>
+            )}
+
+            {checkoutStep === 'confirmation' && createdOrder && (
+              <div className="text-center py-6 space-y-3 text-xs">
+                <div className="text-3xl text-emerald-400">✓</div>
+                <h3 className="text-lg font-black text-white">¡Compra Exitosa!</h3>
+                <p className="text-slate-400">Orden {createdOrder.id} registrada.</p>
+                <button onClick={() => { setCheckoutOpen(false); setCheckStep('shipping'); }} className="grad-btn px-6 py-2">
+                  Volver a la Tienda
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* LOGIN ADMIN MODAL */}
+      {showLoginModal && (
+        <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
+          <div className="glass w-full max-w-sm bg-slate-900 p-6 rounded-2xl relative">
+            <button onClick={() => setShowLogin(false)} className="absolute top-4 right-4 text-slate-400">✕</button>
+            <h3 className="text-sm font-bold text-white mb-3 text-center">Acceso Administrador</h3>
+            <form onSubmit={handleLogin} className="space-y-3 text-xs">
+              <input type="text" placeholder="Usuario" required value={loginForm.username} onChange={e => setLoginForm({...loginForm, username: e.target.value})} className="field" />
+              <input type="password" placeholder="Contraseña" required value={loginForm.password} onChange={e => setLoginForm({...loginForm, password: e.target.value})} className="field" />
+              <button type="submit" className="w-full grad-btn py-2.5">Iniciar Sesión</button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
