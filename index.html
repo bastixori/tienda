@@ -27,13 +27,7 @@
       --text: #f8fafc;
       --cyan: #00f0ff;
     }
-    [data-theme="light"] {
-      --bg-primary: #f8fafc;
-      --bg-card: rgba(255,255,255,.92);
-      --border: rgba(0,0,0,.08);
-      --border-glow: rgba(59,130,246,.4);
-      --text: #0f172a;
-    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: var(--font-main);
@@ -46,7 +40,7 @@
     }
     .glass { background: var(--bg-card); backdrop-filter: blur(16px); border: 1px solid var(--border); }
     .glass-nav { background: rgba(8,11,17,.88); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
-    [data-theme="light"] .glass-nav { background: rgba(255,255,255,.9); }
+
     .grad-text { background: linear-gradient(135deg,#00f0ff,#3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .grad-btn {
       background: linear-gradient(135deg,#00f0ff,#3b82f6); color:#000; font-weight:700;
