@@ -119,11 +119,7 @@ TOP_10_ALIEXPRESS_PRODUCTS = [
    "Carga tu notebook, tablet y smartphone al mismo tiempo. Tecnología GaN III que no genera calor.",
    json.dumps(["Tecnología GaN III", "Carga 3 dispositivos simultáneos", "Salida 65W Turbo"])),
 
-  ("prod-4", "Mini Impresora Térmica Portátil Bluetooth Pocket", "Gadgets Tech",
-   21.990, 29.990, 4.88, 510, 30, "", "public/assets/dock.jpg",
-   "Imprime fotos, etiquetas y notas de estudio al instante desde tu celular. ¡Sin usar tinta!",
-   "Impresora térmica de bolsillo ultra compacta que se conecta por Bluetooth. Ideal para estudiantes y organizadores.",
-   json.dumps(["Sin tinta (tecnología térmica)", "Conexión Bluetooth iOS/Android", "Incluye 1 rollo adhesivo"])),
+
 
   ("prod-5", "Audífonos Inalámbricos TWS Lenovo Thinkplus LivePods", "Audio & Audífonos",
    14.990, 21.990, 4.94, 620, 80, "", "public/assets/headphones.jpg",
