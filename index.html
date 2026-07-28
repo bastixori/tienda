@@ -141,9 +141,6 @@ const CATEGORIES = [
   'Accesorios Tech'
 ];
 
-/* ═══════════════════════════════════════════════════════
-   LOS 10 PRODUCTOS MÁS VENDIDOS DE ALIEXPRESS
-   ═══════════════════════════════════════════════════════ */
 const INITIAL_PRODUCTS = [
   {
     id: "prod-1",
@@ -207,7 +204,7 @@ const INITIAL_PRODUCTS = [
   },
   {
     id: "prod-5",
-    name: "Audífonos Inalámbricos TWS Lenovo Thinkplus LivePods",
+    name: "Audífonos Inalámbricos TWS LivePods HD",
     category: "Audio & Audífonos",
     price: 14.990,
     oldPrice: 21.990,
@@ -302,7 +299,7 @@ const SOCIAL_PROOF_DATA = [
   { name: "Diego", city: "Viña del Mar", product: "Mini Impresora Térmica", qty: 1, mins: 7 },
   { name: "Valentina", city: "Providencia", product: "Mini Lámpara USB Redonda", qty: 4, mins: 2 },
   { name: "Matías", city: "Concepción", product: "Cable USB-C 100W Pantalla LED", qty: 1, mins: 11 },
-  { name: "Sofía", city: "Ñuñoa", product: "Audífonos Lenovo Thinkplus", qty: 1, mins: 5 },
+  { name: "Sofía", city: "Ñuñoa", product: "Audífonos LivePods HD", qty: 1, mins: 5 },
   { name: "Tomás", city: "Temuco", product: "Hub USB-C 8 en 1", qty: 1, mins: 8 },
   { name: "Fernanda", city: "La Serena", product: "Luz LED Tira RGB", qty: 2, mins: 4 },
   { name: "Benjamín", city: "Antofagasta", product: "Soporte Plegable de Aluminio", qty: 1, mins: 6 },
@@ -473,7 +470,7 @@ function App() {
         </div>
       )}
 
-      {/* FLOATING SOCIAL BAR (CIRCULAR LOGOS ONLY) */}
+      {/* FLOATING SOCIAL BAR */}
       {!isAdmin && (
         <div className="floating-social-bar">
           <a
@@ -504,7 +501,7 @@ function App() {
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center text-black font-black text-lg">⚡</div>
           <div>
             <div className="text-lg font-extrabold text-white leading-none">TECNO <span className="grad-text">CALIDAD</span></div>
-            <div className="text-[9px] font-bold text-cyan-400 tracking-widest uppercase">Los 10 más vendidos de AliExpress</div>
+            <div className="text-[9px] font-bold text-cyan-400 tracking-widest uppercase">Tecnología de la mejor calidad</div>
           </div>
         </button>
 
@@ -555,12 +552,12 @@ function App() {
             <div className="max-w-6xl mx-auto px-5">
               <div className="glass p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
                 <div className="max-w-xl">
-                  <span className="badge inline-block mb-3">⚡ Los 10 Más Vendidos de AliExpress Direct</span>
+                  <span className="badge inline-block mb-3">⚡ Catálogo Oficial TecnoCalidad · Máxima Calidad</span>
                   <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-3">
                     Tecnología que <span className="grad-text">resuelve tu día</span>
                   </h1>
                   <p className="text-slate-300 text-xs sm:text-sm mb-4">
-                    Impresoras térmicas sin tinta, cargadores GaN 65W, Power Banks MagSafe Cyberpunk, audífonos Lenovo y adaptadores.
+                    Los mejores productos y gadgets de tecnología con la máxima calidad garantizada. Carga rápida, accesorios inteligentes e iluminación recargable.
                   </p>
 
                   {/* TRUST BADGES */}
@@ -678,7 +675,7 @@ function App() {
 
       <footer className="mt-auto border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
         <span onClick={() => setShowLogin(true)} className="cursor-pointer hover:text-slate-400">
-          © {new Date().getFullYear()} TecnoCalidad · Los 10 más vendidos de AliExpress
+          © {new Date().getFullYear()} TecnoCalidad · Tecnología de la mejor calidad
         </span>
       </footer>
 
