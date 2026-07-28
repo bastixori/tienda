@@ -143,11 +143,7 @@ TOP_10_ALIEXPRESS_PRODUCTS = [
    "Construcción en nylon trenzado militar ultra resistente. Pantalla digital que verifica la velocidad real de carga.",
    json.dumps(["Potencia 100W Power Delivery", "Pantalla LED en tiempo real", "Nylon trenzado indestructible"])),
 
-  ("prod-8", "Smartband Pulsera Inteligente HD Monitoreo Cardíaco", "Gadgets Tech",
-   13.990, 19.990, 4.85, 310, 55, "", "public/assets/lamp.jpg",
-   "Monitorea tus pasos, sueño y pulso cardíaco durante todo el día.",
-   "Pantalla color HD táctil, certificación contra agua y sensores de ritmo cardíaco y oxígeno en sangre.",
-   json.dumps(["Pantalla HD Color", "Medidor de pulso & SpO2", "Notificaciones de llamadas/WhatsApp"])),
+
 
   ("prod-9", "Luz LED Tira RGB USB Inteligente con App & Bluetooth", "Gadgets Tech",
    7.990, 12.990, 4.87, 450, 70, "", "public/assets/lamp.jpg",
