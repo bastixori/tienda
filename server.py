@@ -54,6 +54,8 @@ _rate_store = {}
 _sessions   = {}
 
 SCHEMA_SQL = """
+DROP TABLE IF EXISTS products;
+
 CREATE TABLE IF NOT EXISTS products (
     id              TEXT PRIMARY KEY,
     name            TEXT NOT NULL,
@@ -100,61 +102,61 @@ CREATE TABLE IF NOT EXISTS order_items (
 # LOS 10 PRODUCTOS MÁS VENDIDOS DE ALIEXPRESS
 TOP_10_ALIEXPRESS_PRODUCTS = [
   ("prod-1", "Mini Lámpara USB Redonda Noche", "Lámparas Recargables",
-   4.990, 7.990, 4.98, 340, 150, "public/assets/mini_usb_lamp.png",
+   4.990, 7.990, 4.98, 340, 150, "", "public/assets/mini_usb_lamp.png",
    "Ilumina tu velador toda la noche por menos de $1 al mes de electricidad.",
    "Conéctala a cualquier cargador, power bank o notebook y listo. Sin cables, sin complicaciones. Disponible en Luz Cálida y Blanca.",
    json.dumps(["Plug & Play USB directo", "Solo 1W de consumo", "Luz antideslumbrante"])),
   
   ("prod-2", "Power Bank MagSafe 10.000mAh Cyberpunk Transparente", "Cargadores & Baterías",
-   24.990, 34.990, 4.91, 280, 45, "public/assets/powerbank.jpg",
+   24.990, 34.990, 4.91, 280, 45, "", "public/assets/powerbank.jpg",
    "5 cargas completas sin buscar enchufe. Pégala magnéticamente a tu celular.",
    "Diseño cyberpunk transparente futurista con imán MagSafe ultra fuerte y pantalla LED digital de porcentaje de batería.",
    json.dumps(["Imán MagSafe ultra fuerte", "Pantalla LED de % real", "Carga inalámbrica 15W + PD 22.5W"])),
 
   ("prod-3", "Cargador GaN 65W Fast Charger Dual USB-C + USB-A", "Cargadores & Baterías",
-   22.990, 29.990, 4.93, 195, 60, "public/assets/charger.jpg",
+   22.990, 29.990, 4.93, 195, 60, "", "public/assets/charger.jpg",
    "Del 0% al 50% en solo 20 minutos. Y cabe en tu bolsillo.",
    "Carga tu notebook, tablet y smartphone al mismo tiempo. Tecnología GaN III que no genera calor.",
    json.dumps(["Tecnología GaN III", "Carga 3 dispositivos simultáneos", "Salida 65W Turbo"])),
 
   ("prod-4", "Mini Impresora Térmica Portátil Bluetooth Pocket", "Gadgets Tech",
-   21.990, 29.990, 4.88, 510, 30, "public/assets/dock.jpg",
+   21.990, 29.990, 4.88, 510, 30, "", "public/assets/dock.jpg",
    "Imprime fotos, etiquetas y notas de estudio al instante desde tu celular. ¡Sin usar tinta!",
    "Impresora térmica de bolsillo ultra compacta que se conecta por Bluetooth. Ideal para estudiantes y organizadores.",
    json.dumps(["Sin tinta (tecnología térmica)", "Conexión Bluetooth iOS/Android", "Incluye 1 rollo adhesivo"])),
 
   ("prod-5", "Audífonos Inalámbricos TWS Lenovo Thinkplus LivePods", "Audio & Audífonos",
-   14.990, 21.990, 4.94, 620, 80, "public/assets/headphones.jpg",
+   14.990, 21.990, 4.94, 620, 80, "", "public/assets/headphones.jpg",
    "Sonido HD de alta definición y batería para toda la semana.",
    "Bluetooth 5.3 de baja latencia, estuche de carga USB-C ultraliviano y micrófonos con cancelación de ruido de llamadas.",
    json.dumps(["Bluetooth 5.3 HD", "Autonomía 28 horas", "Resistencia al agua IPX4"])),
 
   ("prod-6", "Adaptador Hub USB-C 8 en 1 HDMI 4K + Ethernet", "Adaptadores & Hubs",
-   21.990, 29.990, 4.95, 180, 35, "public/assets/hub.jpg",
+   21.990, 29.990, 4.95, 180, 35, "", "public/assets/hub.jpg",
    "Conecta monitor 4K, internet, pendrive y carga tu notebook con 1 solo puerto.",
    "Transforma el puerto USB-C de tu equipo en 8 salidas: HDMI 4K, Ethernet RJ45 Gigabit, 3x USB 3.0, Lector SD/TF y PD 100W.",
    json.dumps(["Salida HDMI 4K UHD", "Puerto Ethernet Gigabit 1000Mbps", "Chasis de aluminio aeroespacial"])),
 
   ("prod-7", "Cable USB-C PD 100W con Pantalla LED de Vatios", "Cables & Carga Rápida",
-   11.990, 16.990, 4.89, 410, 90, "public/assets/cable.jpg",
+   11.990, 16.990, 4.89, 410, 90, "", "public/assets/cable.jpg",
    "Te MUESTRA en pantalla cuántos watts está recibiendo tu dispositivo en tiempo real.",
    "Construcción en nylon trenzado militar ultra resistente. Pantalla digital que verifica la velocidad real de carga.",
    json.dumps(["Potencia 100W Power Delivery", "Pantalla LED en tiempo real", "Nylon trenzado indestructible"])),
 
   ("prod-8", "Smartband Pulsera Inteligente HD Monitoreo Cardíaco", "Gadgets Tech",
-   13.990, 19.990, 4.85, 310, 55, "public/assets/lamp.jpg",
+   13.990, 19.990, 4.85, 310, 55, "", "public/assets/lamp.jpg",
    "Monitorea tus pasos, sueño y pulso cardíaco durante todo el día.",
    "Pantalla color HD táctil, certificación contra agua y sensores de ritmo cardíaco y oxígeno en sangre.",
    json.dumps(["Pantalla HD Color", "Medidor de pulso & SpO2", "Notificaciones de llamadas/WhatsApp"])),
 
   ("prod-9", "Luz LED Tira RGB USB Inteligente con App & Bluetooth", "Gadgets Tech",
-   7.990, 12.990, 4.87, 450, 70, "public/assets/lamp.jpg",
+   7.990, 12.990, 4.87, 450, 70, "", "public/assets/lamp.jpg",
    "Ambienta tu escritorio o TV con millones de colores controlados desde tu celular.",
    "Tira LED RGB autoadhesiva con conexión USB directa y control por aplicación móvil o control remoto.",
    json.dumps(["Control por App & Bluetooth", "16 millones de colores RGB", "Sincronización con música"])),
 
   ("prod-10", "Soporte Plegable de Aluminio Ergonómico para Laptop", "Accesorios Tech",
-   9.990, 15.990, 4.90, 290, 65, "public/assets/hub.jpg",
+   9.990, 15.990, 4.90, 290, 65, "", "public/assets/hub.jpg",
    "Evita dolores de cuello y mantiene tu computador frío mientras trabajas.",
    "Estructura de aluminio anodizado con 6 niveles de inclinación ajustable y almohadillas de silicona antideslizantes.",
    json.dumps(["Aluminio ultraliviano plegable", "6 niveles de altura ajustable", "Mejora la ventilación del equipo"]))
@@ -171,8 +173,8 @@ def init_db():
         cur.execute("""
             INSERT OR REPLACE INTO products
               (id, name, category, price, old_price, rating, reviews_count,
-               stock, image, headline, description, specs)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+               stock, badge, image, headline, description, specs)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
         """, prod)
     conn.commit()
     conn.close()
