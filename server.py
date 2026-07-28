@@ -143,6 +143,12 @@ TOP_10_ALIEXPRESS_PRODUCTS = [
    "Construcción en nylon trenzado militar ultra resistente. Pantalla digital que verifica la velocidad real de carga.",
    json.dumps(["Potencia 100W Power Delivery", "Pantalla LED en tiempo real", "Nylon trenzado indestructible"])),
 
+  ("prod-11", "Cable USB a USB-C Xiaomi 120W Turbo Charge (1M, 1.5M, 2M)", "Cables & Carga Rápida",
+   9.990, 14.990, 4.96, 520, 120, "", "public/assets/xiaomi_120w_cable.jpg",
+   "Carga tu celular al 100% en solo 18 minutos. Soporta hasta 120W Turbo Charge 6A.",
+   "Cable reforzado de alto amperaje 6A con conector naranja HyperCharge oficial. Compatible con tecnología Turbo Charge de Xiaomi, Redmi, POCO y smartphones Tipo-C.",
+   json.dumps(["Soporta Carga Turbo 120W / 67W / 33W", "Corriente extrema 6A reforzada", "Formatos 1M, 1.5M y 2M disponibles"])),
+
 
 
   ("prod-9", "Luz LED Tira RGB USB Inteligente con App & Bluetooth", "Gadgets Tech",
