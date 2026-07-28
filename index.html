@@ -68,6 +68,7 @@
     ::-webkit-scrollbar { height: 6px; width:6px; }
     ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.15); border-radius:3px; }
 
+    /* Social Proof Notification */
     .social-proof {
       position: fixed; bottom: 22px; left: 22px; z-index: 180;
       background: rgba(15,23,42,.95); border: 1px solid rgba(0,240,255,.25);
@@ -85,27 +86,32 @@
     }
     .social-proof.hiding { animation: slideOutLeft .4s ease-in forwards; }
 
+    /* Floating Social Bar (Circle Icons Only) */
     .floating-social-bar {
       position: fixed; bottom: 22px; right: 22px; z-index: 170;
-      display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
+      display: flex; flex-direction: column; gap: 12px; align-items: center;
     }
     .social-fab {
-      display: flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px;
-      color: #fff; font-weight: 700; font-size: 0.82rem; text-decoration: none;
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 22px; text-decoration: none;
       box-shadow: 0 8px 25px rgba(0,0,0,.4);
       transition: transform .25s ease, box-shadow .25s ease;
       backdrop-filter: blur(10px);
     }
-    .social-fab:hover { transform: translateY(-3px) scale(1.03); }
+    .social-fab:hover { transform: scale(1.12); }
     .social-fab-wa {
       background: linear-gradient(135deg, #25D366, #128C7E);
-      box-shadow: 0 6px 20px rgba(37,211,102,.35);
+      box-shadow: 0 6px 20px rgba(37,211,102,.4);
     }
+    .social-fab-wa:hover { box-shadow: 0 8px 25px rgba(37,211,102,.65); }
     .social-fab-ig {
       background: linear-gradient(135deg, #833AB4, #FD1D1D, #F56040);
-      box-shadow: 0 6px 20px rgba(253,29,29,.35);
+      box-shadow: 0 6px 20px rgba(253,29,29,.4);
     }
+    .social-fab-ig:hover { box-shadow: 0 8px 25px rgba(253,29,29,.65); }
 
+    /* Trust badges */
     .trust-bar { display: flex; gap: 12px; flex-wrap: wrap; }
     .trust-badge {
       display: flex; align-items: center; gap: 5px;
@@ -336,7 +342,6 @@ function App() {
     localStorage.setItem('tc_theme', theme);
   }, [theme]);
 
-  // Carga productos desde el backend si está activo
   useEffect(() => {
     fetch('/api/products')
       .then(res => res.json())
@@ -468,7 +473,7 @@ function App() {
         </div>
       )}
 
-      {/* FLOATING SOCIAL BAR (INSTAGRAM & WHATSAPP) */}
+      {/* FLOATING SOCIAL BAR (CIRCULAR LOGOS ONLY) */}
       {!isAdmin && (
         <div className="floating-social-bar">
           <a
@@ -478,8 +483,7 @@ function App() {
             className="social-fab social-fab-ig"
             title="Síguenos en Instagram @tecnocalidad.cl"
           >
-            <span className="text-base">📸</span>
-            <span>Instagram</span>
+            📸
           </a>
 
           <a
@@ -489,8 +493,7 @@ function App() {
             className="social-fab social-fab-wa"
             title="¿Dudas? Escríbenos por WhatsApp"
           >
-            <span className="text-base">💬</span>
-            <span>WhatsApp</span>
+            💬
           </a>
         </div>
       )}
@@ -552,7 +555,7 @@ function App() {
             <div className="max-w-6xl mx-auto px-5">
               <div className="glass p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
                 <div className="max-w-xl">
-                  <span className="badge inline-block mb-3">🔥 Los 10 Más Vendidos de AliExpress Direct</span>
+                  <span className="badge inline-block mb-3">⚡ Los 10 Más Vendidos de AliExpress Direct</span>
                   <h1 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-3">
                     Tecnología que <span className="grad-text">resuelve tu día</span>
                   </h1>
